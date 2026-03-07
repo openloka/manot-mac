@@ -17,6 +17,7 @@ enum EditorMode: String, CaseIterable {
 
 struct EditorView: View {
     @Bindable var note: Note
+    @Binding var isZenMode: Bool
     @Environment(\.modelContext) private var modelContext
 
     @State private var editorMode: EditorMode = .edit
@@ -37,19 +38,21 @@ struct EditorView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 0) {
-            titleBar
-
-            Divider()
-
-            contentArea
-
-            Divider()
-
-            statusBar
-        }
-        .toolbar {
-            editorToolbar
+        Group {
+            if isZenMode {
+                zenModeView
+            } else {
+                VStack(spacing: 0) {
+                    titleBar
+                    Divider()
+                    contentArea
+                    Divider()
+                    statusBar
+                }
+                .toolbar {
+                    editorToolbar
+                }
+            }
         }
         .onAppear {
             parseHeadings(from: note.content)
@@ -104,7 +107,7 @@ struct EditorView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            if !headings.isEmpty {
+            if !isZenMode && !headings.isEmpty {
                 Divider()
                 TableOfContentsView(headings: headings)
                     .frame(width: 220)
@@ -165,6 +168,14 @@ struct EditorView: View {
         }
 
         ToolbarItemGroup(placement: .primaryAction) {
+            Button {
+                withAnimation { isZenMode = true }
+            } label: {
+                Image(systemName: "arrow.up.backward.and.arrow.down.forward")
+            }
+            .help("Zen Mode")
+            .keyboardShortcut("z", modifiers: [.command, .shift])
+
             Button {
                 let textToInsert = (note.content.isEmpty ? "" : "\n\n") + EditorView.exampleMarkdown
                 note.content += textToInsert
@@ -276,6 +287,124 @@ struct EditorView: View {
     
     You can even mix **_bold and italic_** text properly.
     """
+
+    // MARK: - Zen Mode
+    
+    private var zenModeView: some View {
+        ZStack {
+            Color(NSColor.windowBackgroundColor)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                zenTitleBar
+                
+                contentArea
+                    .frame(maxWidth: 800)
+            }
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        withAnimation { isZenMode = false }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "arrow.down.right.and.arrow.up.left")
+                            Text("EXIT ZEN MODE")
+                        }
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
+                            .background(Color.white.opacity(0.05))
+                    )
+                    .padding(20)
+                }
+                Spacer()
+            }
+            
+            VStack {
+                Spacer()
+                zenToolbar
+                    .padding(.bottom, 40)
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
+
+    private var zenTitleBar: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 6) {
+                Image(systemName: "text.alignleft")
+                Text("DRAFTING: \(note.title.uppercased()).MD")
+            }
+            .font(.system(size: 11, weight: .bold, design: .rounded))
+            .foregroundColor(.secondary)
+            
+            TextField("Untitled", text: $note.title)
+                .font(.system(size: 32, weight: .bold, design: .default))
+                .textFieldStyle(.plain)
+                .onChange(of: note.title) { _, _ in scheduleAutoSave() }
+        }
+        .padding(.horizontal, 40)
+        .padding(.top, 60)
+        .padding(.bottom, 20)
+        .frame(maxWidth: 800)
+    }
+
+    private var zenToolbar: some View {
+        HStack(spacing: 16) {
+            HStack(spacing: 4) {
+                Text("WORDS")
+                    .foregroundColor(.secondary)
+                Text("\(wordCount)")
+                    .foregroundColor(.blue)
+            }
+            .font(.system(size: 10, weight: .bold, design: .rounded))
+
+            Divider()
+                .frame(height: 12)
+
+            Button {
+                insertMarkdown("**", "**")
+            } label: {
+                Image(systemName: "bold")
+                    .font(.system(size: 13, weight: .bold))
+            }
+            .buttonStyle(.plain)
+            .help("Bold")
+
+            Button {
+                insertMarkdown("_", "_")
+            } label: {
+                Image(systemName: "italic")
+                    .font(.system(size: 13, weight: .bold))
+            }
+            .buttonStyle(.plain)
+            .help("Italic")
+
+            Button {
+                insertMarkdown("[", "](url)")
+            } label: {
+                Image(systemName: "link")
+                    .font(.system(size: 13, weight: .bold))
+            }
+            .buttonStyle(.plain)
+            .help("Link")
+        }
+        .padding(.horizontal, 24)
+        .padding(.vertical, 12)
+        .background(
+            Capsule()
+                .fill(.ultraThinMaterial)
+                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+        )
+    }
 
     // MARK: - Parsing Headings
     
