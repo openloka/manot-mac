@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// Codable transferable used to drag notes between folders
-struct NoteTransferable: Transferable, Codable, Sendable {
+/// Codable transferable used to drag items in the sidebar
+struct SidebarItemTransferable: Transferable, Codable, Sendable {
     let id: UUID
+    let isFolder: Bool
 
     static var transferRepresentation: some TransferRepresentation {
         CodableRepresentation(contentType: .data)

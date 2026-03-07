@@ -61,7 +61,7 @@ struct NoteRowView: View {
         .contextMenu {
             Button("Delete Note", role: .destructive) { onDelete() }
         }
-        .draggable(NoteTransferable(id: note.id))
+        .draggable(SidebarItemTransferable(id: note.id, isFolder: false))
     }
 
     // Smart date: today → time, yesterday → "Yesterday", else → short date

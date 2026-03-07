@@ -17,6 +17,7 @@ struct SidebarView: View {
 
     @State private var isCreatingRootFolder = false
     @State private var newRootFolderName = ""
+    @State private var focusedFolder: Folder?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -30,6 +31,15 @@ struct SidebarView: View {
             }
         }
         .toolbar { sidebarToolbar }
+        .onReceive(NotificationCenter.default.publisher(for: .focusedFolderChanged)) { notification in
+            if let folder = notification.object as? Folder {
+                focusedFolder = folder
+            }
+        }
+        // Clicking outside clears focus
+        .onTapGesture {
+            focusedFolder = nil
+        }
     }
 
     // MARK: - Search Bar
@@ -122,9 +132,13 @@ struct SidebarView: View {
     private var rootDropZone: some View {
         Color.clear
             .frame(maxWidth: .infinity, minHeight: 80)
-            .dropDestination(for: NoteTransferable.self) { items, _ in
+            .dropDestination(for: SidebarItemTransferable.self) { items, _ in
                 guard let item = items.first else { return false }
-                moveNote(id: item.id, toFolder: nil)
+                if item.isFolder {
+                    moveFolder(id: item.id, toParent: nil)
+                } else {
+                    moveNote(id: item.id, toFolder: nil)
+                }
                 return true
             }
     }
@@ -151,13 +165,25 @@ struct SidebarView: View {
     @ToolbarContentBuilder
     private var sidebarToolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigation) {
-            Button { createNote(in: nil) } label: {
+            Button { 
+                if let folder = focusedFolder {
+                    createNote(in: folder)
+                } else {
+                    createNote(in: nil) 
+                }
+            } label: {
                 Image(systemName: "square.and.pencil")
             }
             .help("New Note (⌘N)")
             .keyboardShortcut("n", modifiers: .command)
 
-            Button { startCreatingRootFolder() } label: {
+            Button { 
+                if let folder = focusedFolder {
+                    createFolder(in: folder)
+                } else {
+                    startCreatingRootFolder() 
+                }
+            } label: {
                 Image(systemName: "folder.badge.plus")
             }
             .help("New Folder (⌘⇧N)")
@@ -197,4 +223,20 @@ struct SidebarView: View {
             note.folder = folder
         }
     }
+
+    func moveFolder(id: UUID, toParent destination: Folder?) {
+        let descriptor = FetchDescriptor<Folder>(predicate: #Predicate { $0.id == id })
+        if let movedFolder = try? modelContext.fetch(descriptor).first {
+            movedFolder.parentFolder = destination
+        }
+    }
+
+    private func createFolder(in parent: Folder) {
+        let folder = Folder(name: "New Folder", parentFolder: parent, sortOrder: parent.sortedSubfolders.count)
+        modelContext.insert(folder)
+    }
+}
+
+extension Notification.Name {
+    static let focusedFolderChanged = Notification.Name("focusedFolderChanged")
 }

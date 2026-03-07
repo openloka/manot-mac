@@ -98,7 +98,7 @@ struct FolderRowView: View {
             .buttonStyle(.plain)
 
             // Folder icon
-            Image(systemName: isExpanded ? "folder.open.fill" : "folder.fill")
+            Image(systemName: "folder.fill")
                 .foregroundColor(.accentColor)
                 .font(.callout)
 
@@ -132,17 +132,34 @@ struct FolderRowView: View {
                 .fill(isDropTargeted ? Color.accentColor.opacity(0.14) : Color.clear)
         )
         .contentShape(Rectangle())
+        .onTapGesture {
+            NotificationCenter.default.post(name: .focusedFolderChanged, object: folder)
+            withAnimation(.easeInOut(duration: 0.18)) { isExpanded.toggle() }
+        }
         .contextMenu {
-            Button("New Note in \"\(folder.name)\"") { startCreatingNote() }
-            Button("New Subfolder") { startCreatingSubfolder() }
+            Button("New Note in \"\(folder.name)\"") {
+                // Focus this folder for tracking
+                NotificationCenter.default.post(name: .focusedFolderChanged, object: folder)
+                startCreatingNote() 
+            }
+            Button("New Subfolder") {
+                NotificationCenter.default.post(name: .focusedFolderChanged, object: folder)
+                startCreatingSubfolder()
+            }
             Divider()
             Button("Rename") { startRenaming() }
             Divider()
             Button("Delete Folder", role: .destructive) { deleteFolder() }
         }
-        .dropDestination(for: NoteTransferable.self) { items, _ in
+        .draggable(SidebarItemTransferable(id: folder.id, isFolder: true))
+        .dropDestination(for: SidebarItemTransferable.self) { items, _ in
             guard let item = items.first else { return false }
-            moveNote(id: item.id, toFolder: folder)
+            if item.isFolder {
+                if item.id == folder.id { return false }
+                moveFolder(id: item.id, toParent: folder)
+            } else {
+                moveNote(id: item.id, toFolder: folder)
+            }
             return true
         } isTargeted: { targeted in
             withAnimation { isDropTargeted = targeted }
@@ -213,4 +230,18 @@ struct FolderRowView: View {
             note.folder = destination
         }
     }
+
+    private func moveFolder(id: UUID, toParent destination: Folder) {
+        let descriptor = FetchDescriptor<Folder>(predicate: #Predicate { $0.id == id })
+        if let movedFolder = try? modelContext.fetch(descriptor).first {
+            // Prevent recursive cycles (cant move folder into its own subfolder)
+            var current: Folder? = destination
+            while let p = current {
+                if p.id == movedFolder.id { return }
+                current = p.parentFolder
+            }
+            movedFolder.parentFolder = destination
+        }
+    }
 }
+
