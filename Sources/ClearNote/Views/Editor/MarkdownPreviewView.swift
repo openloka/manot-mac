@@ -4,32 +4,51 @@ struct MarkdownPreviewView: View {
     let content: String
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    Text("Nothing to preview yet.")
-                        .foregroundStyle(.tertiary)
-                        .italic()
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top, 60)
-                } else {
-                    renderedContent
-                        .padding(.bottom, 40)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Text("Nothing to preview yet.")
+                            .foregroundStyle(.tertiary)
+                            .italic()
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top, 60)
+                    } else {
+                        renderedContent
+                            .padding(.bottom, 40)
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 24)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .jumpToRange)) { notification in
+                if let range = notification.userInfo?["range"] as? NSRange {
+                    let nsString = content as NSString
+                    let lines = nsString.components(separatedBy: "\n")
+                    var currentOffset = 0
+                    for (index, line) in lines.enumerated() {
+                        let lineLength = (line as NSString).length
+                        if range.location >= currentOffset && range.location <= currentOffset + lineLength {
+                            withAnimation {
+                                proxy.scrollTo(index, anchor: .top)
+                            }
+                            break
+                        }
+                        currentOffset += lineLength + 1
+                    }
                 }
             }
-            .padding(.horizontal, 28)
-            .padding(.vertical, 24)
-            .frame(maxWidth: 720, alignment: .leading)
-            .frame(maxWidth: .infinity, alignment: .center)
         }
     }
 
     @ViewBuilder
     private var renderedContent: some View {
-        let lines = content.components(separatedBy: "\n")
+        let lines = (content as NSString).components(separatedBy: "\n")
         VStack(alignment: .leading, spacing: 6) {
-            ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
+            ForEach(Array(lines.enumerated()), id: \.offset) { offset, line in
                 lineView(for: line)
+                    .id(offset)
             }
         }
     }
