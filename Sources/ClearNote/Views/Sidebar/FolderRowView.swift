@@ -1,129 +1,216 @@
 import SwiftUI
 import SwiftData
 
+/// Renders a folder row + its children recursively.
+/// Each nesting level adds `INDENT_STEP` points of leading padding.
 struct FolderRowView: View {
     @Environment(\.modelContext) private var modelContext
+
     let folder: Folder
     @Binding var selectedNote: Note?
-    @Binding var renamingFolder: Folder?
-    @Binding var renamingFolderName: String
-    let onDelete: () -> Void
+    let depth: Int
 
-    @State private var isExpanded = true
+    @State private var isExpanded: Bool = true
+    @State private var isRenaming: Bool = false
+    @State private var renamingText: String = ""
+    @State private var isDropTargeted: Bool = false
 
-    var isRenaming: Bool { renamingFolder?.id == folder.id }
+    // Inline child creation
+    @State private var isCreatingNote: Bool = false
+    @State private var isCreatingSubfolder: Bool = false
+    @State private var newChildName: String = ""
+
+    private let INDENT: CGFloat = 18
 
     var body: some View {
-        DisclosureGroup(isExpanded: $isExpanded) {
-            // Sub-folders
-            ForEach(folder.sortedSubfolders) { subfolder in
-                FolderRowView(
-                    folder: subfolder,
-                    selectedNote: $selectedNote,
-                    renamingFolder: $renamingFolder,
-                    renamingFolderName: $renamingFolderName,
-                    onDelete: {
-                        modelContext.delete(subfolder)
+        VStack(alignment: .leading, spacing: 1) {
+            // ── Folder header row ──
+            folderHeader
+
+            // ── Children (shown when expanded) ──
+            if isExpanded {
+                // Inline new subfolder creation
+                if isCreatingSubfolder {
+                    NewItemRow(
+                        placeholder: "Folder name",
+                        text: $newChildName
+                    ) { commitSubfolder() } onCancel: {
+                        isCreatingSubfolder = false
                     }
-                )
-            }
-            // Notes in folder
-            ForEach(folder.sortedNotes) { note in
-                NoteRowView(note: note)
-                    .tag(note)
-                    .contextMenu {
-                        Button("Delete Note", role: .destructive) {
-                            if selectedNote?.id == note.id { selectedNote = nil }
-                            modelContext.delete(note)
-                        }
-                    }
-            }
-        } label: {
-            Label {
-                if isRenaming {
-                    TextField("Folder name", text: $renamingFolderName)
-                        .onSubmit {
-                            commitRename()
-                        }
-                        .onExitCommand {
-                            renamingFolder = nil
-                        }
-                } else {
-                    Text(folder.name)
-                        .fontWeight(.medium)
+                    .padding(.leading, INDENT * CGFloat(depth + 1) + 8)
+                    .padding(.trailing, 8)
                 }
-            } icon: {
-                Image(systemName: isExpanded ? "folder.open" : "folder")
-                    .foregroundColor(.accentColor)
+
+                // Inline new note creation row
+                if isCreatingNote {
+                    NewItemRow(
+                        placeholder: "Note title",
+                        text: $newChildName,
+                        icon: "doc.text"
+                    ) { commitNote() } onCancel: {
+                        isCreatingNote = false
+                    }
+                    .padding(.leading, INDENT * CGFloat(depth + 1) + 8)
+                    .padding(.trailing, 8)
+                }
+
+                // Sub-folders (recursive)
+                ForEach(folder.sortedSubfolders) { subfolder in
+                    FolderRowView(
+                        folder: subfolder,
+                        selectedNote: $selectedNote,
+                        depth: depth + 1
+                    )
+                }
+
+                // Notes inside this folder
+                ForEach(folder.sortedNotes) { note in
+                    NoteRowView(
+                        note: note,
+                        selectedNote: $selectedNote,
+                        depth: depth + 1
+                    ) {
+                        deleteNote(note)
+                    }
+                    .padding(.horizontal, 8)
+                }
             }
         }
+    }
+
+    // MARK: - Folder Header Row
+
+    private var folderHeader: some View {
+        HStack(spacing: 4) {
+            // Indentation
+            Spacer().frame(width: INDENT * CGFloat(depth))
+
+            // Expand / collapse chevron
+            Button {
+                withAnimation(.easeInOut(duration: 0.18)) { isExpanded.toggle() }
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .rotationEffect(.degrees(isExpanded ? 90 : 0))
+                    .frame(width: 14)
+            }
+            .buttonStyle(.plain)
+
+            // Folder icon
+            Image(systemName: isExpanded ? "folder.open.fill" : "folder.fill")
+                .foregroundColor(.accentColor)
+                .font(.callout)
+
+            // Name or rename field
+            if isRenaming {
+                TextField("Folder name", text: $renamingText)
+                    .textFieldStyle(.plain)
+                    .font(.callout.weight(.medium))
+                    .onSubmit { commitRename() }
+                    .onExitCommand { isRenaming = false }
+            } else {
+                Text(folder.name)
+                    .font(.callout.weight(.medium))
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            // Note count badge
+            if let count = folder.notes?.count, count > 0 {
+                Text("\(count)")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .padding(.trailing, 4)
+            }
+        }
+        .padding(.vertical, 5)
+        .padding(.horizontal, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                .fill(isDropTargeted ? Color.accentColor.opacity(0.14) : Color.clear)
+        )
+        .contentShape(Rectangle())
         .contextMenu {
-            Button("New Note in Folder") {
-                createNote()
-            }
-            Button("New Subfolder") {
-                createSubfolder()
-            }
+            Button("New Note in \"\(folder.name)\"") { startCreatingNote() }
+            Button("New Subfolder") { startCreatingSubfolder() }
             Divider()
-            Button("Rename") {
-                startRename()
-            }
+            Button("Rename") { startRenaming() }
             Divider()
-            Button("Delete Folder", role: .destructive) {
-                onDelete()
-            }
+            Button("Delete Folder", role: .destructive) { deleteFolder() }
         }
         .dropDestination(for: NoteTransferable.self) { items, _ in
-            guard let transferable = items.first else { return false }
-            moveNote(withID: transferable.id, toFolder: folder)
+            guard let item = items.first else { return false }
+            moveNote(id: item.id, toFolder: folder)
             return true
+        } isTargeted: { targeted in
+            withAnimation { isDropTargeted = targeted }
         }
     }
 
     // MARK: - Actions
 
-    private func createNote() {
+    private func startCreatingNote() {
+        newChildName = ""
+        isCreatingNote = true
+        if !isExpanded { withAnimation { isExpanded = true } }
+    }
+
+    private func commitNote() {
+        let title = newChildName.trimmingCharacters(in: .whitespaces)
         let note = Note(
-            title: "Untitled Note",
+            title: title.isEmpty ? "Untitled" : title,
             content: "",
             folder: folder,
-            sortOrder: folder.notes?.count ?? 0
+            sortOrder: folder.sortedNotes.count
         )
         modelContext.insert(note)
         selectedNote = note
+        isCreatingNote = false
     }
 
-    private func createSubfolder() {
+    private func startCreatingSubfolder() {
+        newChildName = ""
+        isCreatingSubfolder = true
+        if !isExpanded { withAnimation { isExpanded = true } }
+    }
+
+    private func commitSubfolder() {
+        let name = newChildName.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty else { isCreatingSubfolder = false; return }
         let subfolder = Folder(
-            name: "New Folder",
+            name: name,
             parentFolder: folder,
-            sortOrder: folder.subfolders?.count ?? 0
+            sortOrder: folder.sortedSubfolders.count
         )
         modelContext.insert(subfolder)
-        isExpanded = true
-        renamingFolderName = subfolder.name
-        renamingFolder = subfolder
+        isCreatingSubfolder = false
     }
 
-    private func startRename() {
-        renamingFolderName = folder.name
-        renamingFolder = folder
+    private func startRenaming() {
+        renamingText = folder.name
+        isRenaming = true
     }
 
     private func commitRename() {
-        let trimmed = renamingFolderName.trimmingCharacters(in: .whitespaces)
-        if !trimmed.isEmpty {
-            folder.name = trimmed
-        }
-        renamingFolder = nil
+        let name = renamingText.trimmingCharacters(in: .whitespaces)
+        if !name.isEmpty { folder.name = name }
+        isRenaming = false
     }
 
-    private func moveNote(withID noteID: UUID, toFolder destination: Folder) {
-        // Find the note in all folders and move it
-        let descriptor = FetchDescriptor<Note>(predicate: #Predicate { $0.id == noteID })
+    private func deleteFolder() {
+        modelContext.delete(folder)
+    }
+
+    private func deleteNote(_ note: Note) {
+        modelContext.delete(note)
+    }
+
+    private func moveNote(id: UUID, toFolder destination: Folder) {
+        let descriptor = FetchDescriptor<Note>(predicate: #Predicate { $0.id == id })
         if let note = try? modelContext.fetch(descriptor).first {
             note.folder = destination
-            note.sortOrder = destination.notes?.count ?? 0
         }
     }
 }

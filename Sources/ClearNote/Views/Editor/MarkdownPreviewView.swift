@@ -17,6 +17,8 @@ struct MarkdownPreviewView: View {
                         .padding(.bottom, 40)
                 }
             }
+            .padding(.horizontal, 28)
+            .padding(.vertical, 24)
             .frame(maxWidth: 720, alignment: .leading)
             .frame(maxWidth: .infinity, alignment: .center)
         }

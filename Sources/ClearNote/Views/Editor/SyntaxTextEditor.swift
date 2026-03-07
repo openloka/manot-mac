@@ -17,6 +17,7 @@ struct SyntaxTextEditor: NSViewRepresentable {
         let scrollView = NSTextView.scrollableTextView()
         guard let textView = scrollView.documentView as? NSTextView else { return scrollView }
 
+        context.coordinator.textView = textView
         textView.delegate = context.coordinator
         textView.isRichText = false
         textView.allowsUndo = true
@@ -26,7 +27,7 @@ struct SyntaxTextEditor: NSViewRepresentable {
         textView.isAutomaticSpellingCorrectionEnabled = true
         textView.isContinuousSpellCheckingEnabled = true
         textView.font = NSFont.monospacedSystemFont(ofSize: 14, weight: .regular)
-        textView.textContainerInset = NSSize(width: 4, height: 4)
+        textView.textContainerInset = NSSize(width: 24, height: 24)
         textView.textContainer?.lineFragmentPadding = 0
         textView.string = text
 
@@ -44,11 +45,9 @@ struct SyntaxTextEditor: NSViewRepresentable {
 
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
         guard let textView = scrollView.documentView as? NSTextView else { return }
-        // Only update if text was changed externally (avoid cursor reset)
+        // Only update if the string genuinely changed outside to prevent cursor jumps
         if textView.string != text {
-            let selectedRange = textView.selectedRange()
             textView.string = text
-            textView.setSelectedRange(selectedRange)
             applyHighlighting(to: textView)
         }
     }
@@ -57,10 +56,52 @@ struct SyntaxTextEditor: NSViewRepresentable {
 
     final class Coordinator: NSObject, NSTextViewDelegate {
         var parent: SyntaxTextEditor
+        weak var textView: NSTextView?
         private var highlightTask: Task<Void, Never>?
 
         init(_ parent: SyntaxTextEditor) {
             self.parent = parent
+            super.init()
+            
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleInsertMarkdown(_:)),
+                name: NSNotification.Name("insertMarkdown"),
+                object: nil
+            )
+        }
+
+        deinit {
+            NotificationCenter.default.removeObserver(self)
+        }
+
+        @objc func handleInsertMarkdown(_ notification: Notification) {
+            guard let textView = textView,
+                  let window = textView.window,
+                  window.isKeyWindow,
+                  let userInfo = notification.userInfo,
+                  let prefix = userInfo["prefix"] as? String,
+                  let suffix = userInfo["suffix"] as? String else { return }
+            
+            let range = textView.selectedRange()
+            let selectedText = (textView.string as NSString).substring(with: range)
+            let replacementText = prefix + selectedText + suffix
+            
+            if textView.shouldChangeText(in: range, replacementString: replacementText) {
+                textView.replaceCharacters(in: range, with: replacementText)
+                textView.didChangeText()
+                
+                // Move cursor correctly
+                if selectedText.isEmpty {
+                    // Place cursor between prefix and suffix
+                    let newPos = range.location + prefix.count
+                    textView.setSelectedRange(NSRange(location: newPos, length: 0))
+                } else {
+                    // Select the wrapped text (keep internal selection)
+                    let newRange = NSRange(location: range.location + prefix.count, length: selectedText.count)
+                    textView.setSelectedRange(newRange)
+                }
+            }
         }
 
         func textDidChange(_ notification: Notification) {

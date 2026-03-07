@@ -83,15 +83,13 @@ struct EditorView: View {
             syntaxEditor
         case .preview:
             MarkdownPreviewView(content: note.content)
-                .padding(.horizontal, 28)
-                .padding(.vertical, 16)
         case .split:
             HSplitView {
                 syntaxEditor
-                Divider()
+                    .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
+                
                 MarkdownPreviewView(content: note.content)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 14)
+                    .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
@@ -99,14 +97,10 @@ struct EditorView: View {
     // MARK: - Syntax-Aware Editor
 
     private var syntaxEditor: some View {
-        ScrollView {
-            SyntaxTextEditor(text: $note.content, onChange: {
-                scheduleAutoSave()
-            })
-            .frame(maxWidth: .infinity, minHeight: 400, alignment: .topLeading)
-            .padding(.horizontal, 24)
-            .padding(.vertical, 16)
-        }
+        SyntaxTextEditor(text: $note.content, onChange: {
+            scheduleAutoSave()
+        })
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Status Bar
@@ -208,6 +202,14 @@ struct EditorView: View {
     // MARK: - Markdown Insertion Helper
 
     private func insertMarkdown(_ prefix: String, _ suffix: String) {
-        note.content += "\(prefix)\(suffix)"
+        NotificationCenter.default.post(
+            name: .insertMarkdown,
+            object: nil,
+            userInfo: ["prefix": prefix, "suffix": suffix]
+        )
     }
+}
+
+extension Notification.Name {
+    static let insertMarkdown = Notification.Name("insertMarkdown")
 }

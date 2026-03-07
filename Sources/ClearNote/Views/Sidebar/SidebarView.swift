@@ -4,35 +4,32 @@ import SwiftData
 struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
 
+    // Root-level folders only (no parent)
     @Query(filter: #Predicate<Folder> { $0.parentFolder == nil }, sort: \.sortOrder)
     private var rootFolders: [Folder]
 
-    @Query(filter: #Predicate<Note> { $0.folder == nil }, sort: \.updatedAt, order: .reverse)
-    private var unfolderedNotes: [Note]
+    // Root-level notes only (no folder)
+    @Query(filter: #Predicate<Note> { $0.folder == nil }, sort: \.sortOrder)
+    private var rootNotes: [Note]
 
     @Binding var selectedNote: Note?
     @Binding var searchText: String
 
-    @State private var renamingFolder: Folder?
-    @State private var renamingFolderName = ""
-    @State private var isCreatingFolder = false
-    @State private var newFolderName = ""
-    @FocusState private var folderFieldFocused: Bool
+    @State private var isCreatingRootFolder = false
+    @State private var newRootFolderName = ""
 
     var body: some View {
         VStack(spacing: 0) {
             searchBar
-            Divider().opacity(0.5)
+            Divider().opacity(0.4)
 
             if searchText.isEmpty {
-                mainList
+                treeView
             } else {
                 SearchResultsView(searchText: searchText, selectedNote: $selectedNote)
             }
         }
-        .toolbar {
-            sidebarToolbar
-        }
+        .toolbar { sidebarToolbar }
     }
 
     // MARK: - Search Bar
@@ -41,7 +38,7 @@ struct SidebarView: View {
         HStack(spacing: 6) {
             Image(systemName: "magnifyingglass")
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
 
             TextField("Search", text: $searchText)
                 .textFieldStyle(.plain)
@@ -53,7 +50,7 @@ struct SidebarView: View {
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
                 .buttonStyle(.plain)
                 .transition(.scale.combined(with: .opacity))
@@ -64,89 +61,89 @@ struct SidebarView: View {
         .background(
             RoundedRectangle(cornerRadius: 7, style: .continuous)
                 .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
         )
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
     }
 
-    // MARK: - Main Folder / Note List
+    // MARK: - Tree View
 
-    private var mainList: some View {
-        List(selection: $selectedNote) {
-            // Inline new-folder creation row
-            if isCreatingFolder {
-                newFolderRow
-            }
+    private var treeView: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 1) {
 
-            // Root folders
-            ForEach(rootFolders) { folder in
-                FolderRowView(
-                    folder: folder,
-                    selectedNote: $selectedNote,
-                    renamingFolder: $renamingFolder,
-                    renamingFolderName: $renamingFolderName,
-                    onDelete: { deleteFolder(folder) }
-                )
-            }
-
-            // Unfiled notes at root level
-            if !unfolderedNotes.isEmpty {
-                Section {
-                    ForEach(unfolderedNotes) { note in
-                        NoteRowView(note: note)
-                            .tag(note)
-                            .contextMenu {
-                                Button("Delete Note", role: .destructive) { deleteNote(note) }
-                            }
+                // ── Inline new-root-folder row ──
+                if isCreatingRootFolder {
+                    NewItemRow(placeholder: "Folder name", text: $newRootFolderName) {
+                        commitRootFolder()
+                    } onCancel: {
+                        isCreatingRootFolder = false
                     }
-                } header: {
-                    Label("Unfiled", systemImage: "tray")
-                        .font(.caption.uppercaseSmallCaps())
-                        .foregroundColor(.secondary)
+                    .padding(.horizontal, 8)
+                }
+
+                // ── Root folders ──
+                ForEach(rootFolders) { folder in
+                    FolderRowView(
+                        folder: folder,
+                        selectedNote: $selectedNote,
+                        depth: 0
+                    )
+                }
+
+                // ── Root notes ──
+                ForEach(rootNotes) { note in
+                    NoteRowView(
+                        note: note,
+                        selectedNote: $selectedNote,
+                        depth: 0
+                    ) {
+                        deleteNote(note)
+                    }
+                    .padding(.horizontal, 8)
+                }
+
+                // ── Bottom root-level drop zone ──
+                rootDropZone
+
+                // ── Empty state ──
+                if rootFolders.isEmpty && rootNotes.isEmpty && !isCreatingRootFolder {
+                    emptyState
                 }
             }
-
-            // Empty state
-            if rootFolders.isEmpty && unfolderedNotes.isEmpty {
-                emptyListState
-            }
+            .padding(.vertical, 6)
         }
-        .listStyle(.sidebar)
         .scrollContentBackground(.hidden)
         .background(.ultraThinMaterial)
     }
 
+    // Transparent drop zone at the bottom to move notes back to root level
     @ViewBuilder
-    private var newFolderRow: some View {
-        HStack {
-            Image(systemName: "folder.badge.plus")
-                .foregroundColor(.accentColor)
-            TextField("Folder name", text: $newFolderName)
-                .focused($folderFieldFocused)
-                .onSubmit { commitNewFolder() }
-                .onExitCommand { cancelNewFolder() }
-        }
-        .listRowBackground(Color.accentColor.opacity(0.08))
+    private var rootDropZone: some View {
+        Color.clear
+            .frame(maxWidth: .infinity, minHeight: 80)
+            .dropDestination(for: NoteTransferable.self) { items, _ in
+                guard let item = items.first else { return false }
+                moveNote(id: item.id, toFolder: nil)
+                return true
+            }
     }
 
     @ViewBuilder
-    private var emptyListState: some View {
-        VStack(spacing: 10) {
+    private var emptyState: some View {
+        VStack(spacing: 8) {
             Image(systemName: "note.text.badge.plus")
-                .font(.system(size: 32))
+                .font(.system(size: 30))
                 .foregroundStyle(.tertiary)
             Text("No notes yet")
                 .font(.callout)
                 .foregroundStyle(.secondary)
-            Text("Press ⌘N to create your first note")
+            Text("Press ⌘N to create a note")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
         .frame(maxWidth: .infinity)
         .padding(.top, 40)
-        .listRowBackground(Color.clear)
-        .listRowSeparator(.hidden)
     }
 
     // MARK: - Toolbar
@@ -154,13 +151,13 @@ struct SidebarView: View {
     @ToolbarContentBuilder
     private var sidebarToolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigation) {
-            Button(action: { createNote(in: nil) }) {
+            Button { createNote(in: nil) } label: {
                 Image(systemName: "square.and.pencil")
             }
             .help("New Note (⌘N)")
             .keyboardShortcut("n", modifiers: .command)
 
-            Button(action: startCreatingFolder) {
+            Button { startCreatingRootFolder() } label: {
                 Image(systemName: "folder.badge.plus")
             }
             .help("New Folder (⌘⇧N)")
@@ -171,37 +168,33 @@ struct SidebarView: View {
     // MARK: - Actions
 
     func createNote(in folder: Folder?) {
-        let count = folder?.notes?.count ?? unfolderedNotes.count
-        let note = Note(title: "Untitled", content: "", folder: folder, sortOrder: count)
+        let note = Note(title: "Untitled", content: "", folder: folder, sortOrder: 0)
         modelContext.insert(note)
         selectedNote = note
     }
 
-    func startCreatingFolder() {
-        newFolderName = ""
-        withAnimation { isCreatingFolder = true }
-        folderFieldFocused = true
+    func startCreatingRootFolder() {
+        newRootFolderName = ""
+        isCreatingRootFolder = true
     }
 
-    func commitNewFolder() {
-        let name = newFolderName.trimmingCharacters(in: .whitespaces)
-        guard !name.isEmpty else { cancelNewFolder(); return }
-        let folder = Folder(name: name, sortOrder: rootFolders.count)
+    func commitRootFolder() {
+        let name = newRootFolderName.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty else { isCreatingRootFolder = false; return }
+        let folder = Folder(name: name, parentFolder: nil, sortOrder: rootFolders.count)
         modelContext.insert(folder)
-        withAnimation { isCreatingFolder = false }
-    }
-
-    func cancelNewFolder() {
-        withAnimation { isCreatingFolder = false }
-    }
-
-    func deleteFolder(_ folder: Folder) {
-        if selectedNote?.folder?.id == folder.id { selectedNote = nil }
-        modelContext.delete(folder)
+        isCreatingRootFolder = false
     }
 
     func deleteNote(_ note: Note) {
         if selectedNote?.id == note.id { selectedNote = nil }
         modelContext.delete(note)
+    }
+
+    func moveNote(id: UUID, toFolder folder: Folder?) {
+        let descriptor = FetchDescriptor<Note>(predicate: #Predicate { $0.id == id })
+        if let note = try? modelContext.fetch(descriptor).first {
+            note.folder = folder
+        }
     }
 }

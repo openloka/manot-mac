@@ -29,7 +29,14 @@ struct SearchResultsView: View {
                 ContentUnavailableView.search(text: searchText)
             } else {
                 ForEach(filteredNotes) { note in
-                    NoteRowView(note: note)
+                    NoteRowView(
+                        note: note,
+                        selectedNote: $selectedNote,
+                        onDelete: {
+                            if selectedNote?.id == note.id { selectedNote = nil }
+                            modelContext.delete(note)
+                        }
+                    )
                         .tag(note)
                 }
             }

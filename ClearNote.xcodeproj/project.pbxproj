@@ -22,6 +22,7 @@
 		BA003013 /* NoteTransferable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002013 /* NoteTransferable.swift */; };
 		BA003014 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002014 /* SearchResultsView.swift */; };
 		BA003015 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002015 /* SidebarView.swift */; };
+		BA003016 /* NewItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002016 /* NewItemRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		BA002013 /* NoteTransferable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTransferable.swift; sourceTree = "<group>"; };
 		BA002014 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
 		BA002015 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		BA002016 /* NewItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				BA002013 /* NoteTransferable.swift */,
 				BA002014 /* SearchResultsView.swift */,
 				BA002015 /* SidebarView.swift */,
+				BA002016 /* NewItemRow.swift */,
 			);
 			path = Sidebar;
 			sourceTree = "<group>";
@@ -164,13 +167,6 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
-				TargetAttributes = {
-					BA001011 = {
-						CreatedOnToolsVersion = 15.0;
-					};
-				};
 			};
 			buildConfigurationList = BA001015 /* Build configuration list for PBXProject "ClearNote" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -220,6 +216,7 @@
 				BA003013 /* NoteTransferable.swift in Sources */,
 				BA003014 /* SearchResultsView.swift in Sources */,
 				BA003015 /* SidebarView.swift in Sources */,
+				BA003016 /* NewItemRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
