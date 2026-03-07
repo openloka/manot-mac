@@ -19,6 +19,7 @@ struct EditorView: View {
     @Bindable var note: Note
     @Binding var isZenMode: Bool
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var themeManager: ThemeManager
 
     @State private var editorMode: EditorMode = .edit
     @State private var saveTask: Task<Void, Never>?
@@ -227,6 +228,15 @@ struct EditorView: View {
         }
 
         ToolbarItemGroup(placement: .primaryAction) {
+            // Theme toggle
+            Button {
+                themeManager.cycle()
+            } label: {
+                Image(systemName: themeManager.current.iconName)
+            }
+            .help("Appearance: \(themeManager.current.label) – click to switch")
+            .keyboardShortcut("t", modifiers: [.command, .shift])
+
             Button {
                 withAnimation { isZenMode = true }
             } label: {

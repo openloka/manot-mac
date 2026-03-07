@@ -7,6 +7,7 @@ struct SyntaxTextEditor: NSViewRepresentable {
     @Binding var text: String
     var onChange: () -> Void
     var scrollSyncManager: ScrollSyncManager?
+    @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - NSViewRepresentable
 

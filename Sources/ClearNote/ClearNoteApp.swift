@@ -4,6 +4,7 @@ import SwiftData
 @main
 struct ClearNoteApp: App {
     let modelContainer: ModelContainer
+    @StateObject private var themeManager = ThemeManager()
 
     init() {
         do {
@@ -24,6 +25,8 @@ struct ClearNoteApp: App {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 780, minHeight: 520)
+                .environmentObject(themeManager)
+                .preferredColorScheme(themeManager.current.colorScheme)
         }
         .modelContainer(modelContainer)
         .windowStyle(.titleBar)

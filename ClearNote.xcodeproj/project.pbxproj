@@ -25,6 +25,7 @@
 		BA003015 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002015 /* SidebarView.swift */; };
 		BA003016 /* NewItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002016 /* NewItemRow.swift */; };
 		BA003017 /* FolderTransferable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002017 /* FolderTransferable.swift */; };
+		BA003018 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002018 /* ThemeManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		BA002015 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		BA002016 /* NewItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemRow.swift; sourceTree = "<group>"; };
 		BA002017 /* FolderTransferable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderTransferable.swift; sourceTree = "<group>"; };
+		BA002018 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 			children = (
 				BA002004 /* AppCommands.swift */,
 				BA002005 /* ExportService.swift */,
+				BA002018 /* ThemeManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				BA003016 /* NewItemRow.swift in Sources */,
 				BA003017 /* FolderTransferable.swift in Sources */,
 				96569334151B47454AFA7BB5 /* ScrollSyncManager.swift in Sources */,
+				BA003018 /* ThemeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

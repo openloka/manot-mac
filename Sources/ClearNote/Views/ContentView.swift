@@ -3,6 +3,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var themeManager: ThemeManager
 
     @Query(filter: #Predicate<Folder> { $0.parentFolder == nil }, sort: \.sortOrder)
     private var rootFolders: [Folder]
@@ -33,6 +34,7 @@ struct ContentView: View {
         .navigationSplitViewStyle(.balanced)
         .toolbar(isZenMode ? .hidden : .visible, for: .windowToolbar)
         .onAppear {
+            themeManager.applyToNSApp()
             if selectedNote == nil {
                 // Auto-select most recently modified note
                 let allNotes = rootFolders.flatMap { $0.sortedNotes } + Array(unfolderedNotes)
