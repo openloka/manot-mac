@@ -1,0 +1,15 @@
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/ClearNoteApp.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Models/Folder.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Models/Note.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Utilities/AppCommands.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Utilities/ExportService.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/ContentView.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/EditorView.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/EmptyStateView.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/MarkdownPreviewView.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/SyntaxTextEditor.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/FolderRowView.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/NoteRowView.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/NoteTransferable.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/SearchResultsView.swift
+/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/SidebarView.swift

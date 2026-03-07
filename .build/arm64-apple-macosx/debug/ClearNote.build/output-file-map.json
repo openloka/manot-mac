@@ -1,0 +1,110 @@
+{
+  "": {
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/master.swiftdeps"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/ClearNoteApp.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ClearNoteApp.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ClearNoteApp.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ClearNoteApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ClearNoteApp.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ClearNoteApp.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Models/Folder.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Folder.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Folder.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Folder~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Folder.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Folder.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Models/Note.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Note.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Note.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Note~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Note.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/Note.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Utilities/AppCommands.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/AppCommands.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/AppCommands.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/AppCommands~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/AppCommands.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/AppCommands.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Utilities/ExportService.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ExportService.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ExportService.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ExportService~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ExportService.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ExportService.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/ContentView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ContentView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ContentView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ContentView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/ContentView.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/EditorView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EditorView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EditorView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EditorView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EditorView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EditorView.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/EmptyStateView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EmptyStateView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EmptyStateView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EmptyStateView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EmptyStateView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/EmptyStateView.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/MarkdownPreviewView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/MarkdownPreviewView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/MarkdownPreviewView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/MarkdownPreviewView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/MarkdownPreviewView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/MarkdownPreviewView.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Editor/SyntaxTextEditor.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SyntaxTextEditor.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SyntaxTextEditor.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SyntaxTextEditor~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SyntaxTextEditor.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SyntaxTextEditor.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/FolderRowView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/FolderRowView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/FolderRowView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/FolderRowView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/FolderRowView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/FolderRowView.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/NoteRowView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteRowView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteRowView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteRowView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteRowView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteRowView.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/NoteTransferable.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteTransferable.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteTransferable.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteTransferable~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteTransferable.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/NoteTransferable.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/SearchResultsView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SearchResultsView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SearchResultsView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SearchResultsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SearchResultsView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SearchResultsView.dia"
+  },
+  "/Users/garrypriambudi/Sites/MarkdownNotes/Sources/ClearNote/Views/Sidebar/SidebarView.swift": {
+    "dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SidebarView.d",
+    "object": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SidebarView.swift.o",
+    "swiftmodule": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SidebarView~partial.swiftmodule",
+    "swift-dependencies": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SidebarView.swiftdeps",
+    "diagnostics": "/Users/garrypriambudi/Sites/MarkdownNotes/.build/arm64-apple-macosx/debug/ClearNote.build/SidebarView.dia"
+  }
+}
