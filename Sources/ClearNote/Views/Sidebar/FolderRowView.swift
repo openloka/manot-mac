@@ -8,6 +8,7 @@ struct FolderRowView: View {
 
     let folder: Folder
     @Binding var selectedNote: Note?
+    @Binding var focusedFolder: Folder?
     let depth: Int
 
     @State private var isExpanded: Bool = true
@@ -59,6 +60,7 @@ struct FolderRowView: View {
                     FolderRowView(
                         folder: subfolder,
                         selectedNote: $selectedNote,
+                        focusedFolder: $focusedFolder,
                         depth: depth + 1
                     )
                 }
@@ -129,21 +131,24 @@ struct FolderRowView: View {
         .padding(.horizontal, 8)
         .background(
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(isDropTargeted ? Color.accentColor.opacity(0.14) : Color.clear)
+                .fill(
+                    isDropTargeted ? Color.accentColor.opacity(0.14) :
+                    (focusedFolder?.id == folder.id ? Color.primary.opacity(0.06) : Color.clear)
+                )
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            NotificationCenter.default.post(name: .focusedFolderChanged, object: folder)
+            focusedFolder = folder
             withAnimation(.easeInOut(duration: 0.18)) { isExpanded.toggle() }
         }
         .contextMenu {
             Button("New Note in \"\(folder.name)\"") {
                 // Focus this folder for tracking
-                NotificationCenter.default.post(name: .focusedFolderChanged, object: folder)
+                focusedFolder = folder
                 startCreatingNote() 
             }
             Button("New Subfolder") {
-                NotificationCenter.default.post(name: .focusedFolderChanged, object: folder)
+                focusedFolder = folder
                 startCreatingSubfolder()
             }
             Divider()

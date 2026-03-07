@@ -31,14 +31,13 @@ struct SidebarView: View {
             }
         }
         .toolbar { sidebarToolbar }
-        .onReceive(NotificationCenter.default.publisher(for: .focusedFolderChanged)) { notification in
-            if let folder = notification.object as? Folder {
-                focusedFolder = folder
-            }
-        }
         // Clicking outside clears focus
         .onTapGesture {
             focusedFolder = nil
+            selectedNote = nil
+        }
+        .onChange(of: selectedNote) { _, newNote in
+            focusedFolder = newNote?.folder
         }
     }
 
@@ -97,6 +96,7 @@ struct SidebarView: View {
                     FolderRowView(
                         folder: folder,
                         selectedNote: $selectedNote,
+                        focusedFolder: $focusedFolder,
                         depth: 0
                     )
                 }
@@ -235,8 +235,4 @@ struct SidebarView: View {
         let folder = Folder(name: "New Folder", parentFolder: parent, sortOrder: parent.sortedSubfolders.count)
         modelContext.insert(folder)
     }
-}
-
-extension Notification.Name {
-    static let focusedFolderChanged = Notification.Name("focusedFolderChanged")
 }
