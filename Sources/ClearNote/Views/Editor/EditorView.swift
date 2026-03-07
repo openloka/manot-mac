@@ -24,6 +24,7 @@ struct EditorView: View {
     @State private var saveTask: Task<Void, Never>?
     @State private var showWordCount = true
     @State private var headings: [HeadingItem] = []
+    @State private var scrollSyncManager = ScrollSyncManager()
 
     // MARK: - Computed
 
@@ -104,6 +105,12 @@ struct EditorView: View {
         .onChange(of: note.content) { _, newContent in
             parseHeadings(from: newContent)
         }
+        .onChange(of: editorMode) { _, newMode in
+            scrollSyncManager.isEnabled = (newMode == .split)
+        }
+        .onAppear {
+            scrollSyncManager.isEnabled = (editorMode == .split)
+        }
     }
 
     // MARK: - Title Bar
@@ -138,13 +145,13 @@ struct EditorView: View {
                 case .edit:
                     syntaxEditor
                 case .preview:
-                    MarkdownPreviewView(content: note.content)
+                    MarkdownPreviewView(content: note.content, scrollSyncManager: scrollSyncManager)
                 case .split:
                     HSplitView {
                         syntaxEditor
                             .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
                         
-                        MarkdownPreviewView(content: note.content)
+                        MarkdownPreviewView(content: note.content, scrollSyncManager: scrollSyncManager)
                             .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
@@ -164,7 +171,7 @@ struct EditorView: View {
     private var syntaxEditor: some View {
         SyntaxTextEditor(text: $note.content, onChange: {
             scheduleAutoSave()
-        })
+        }, scrollSyncManager: scrollSyncManager)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 

@@ -6,6 +6,7 @@ import AppKit
 struct SyntaxTextEditor: NSViewRepresentable {
     @Binding var text: String
     var onChange: () -> Void
+    var scrollSyncManager: ScrollSyncManager?
 
     // MARK: - NSViewRepresentable
 
@@ -40,10 +41,19 @@ struct SyntaxTextEditor: NSViewRepresentable {
         textView.isHorizontallyResizable = false
 
         applyHighlighting(to: textView)
+        
+        if let scrollSyncManager = scrollSyncManager {
+            scrollSyncManager.editorScrollView = scrollView
+        }
+        
         return scrollView
     }
 
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
+        if let scrollSyncManager = scrollSyncManager {
+            scrollSyncManager.editorScrollView = scrollView
+        }
+        
         guard let textView = scrollView.documentView as? NSTextView else { return }
         // Only update if the string genuinely changed outside to prevent cursor jumps
         if textView.string != text {

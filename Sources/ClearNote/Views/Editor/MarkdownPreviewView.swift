@@ -2,10 +2,18 @@ import SwiftUI
 
 struct MarkdownPreviewView: View {
     let content: String
+    var scrollSyncManager: ScrollSyncManager?
 
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
+                if let scrollSyncManager = scrollSyncManager {
+                    ScrollViewExtractor { scrollView in
+                        scrollSyncManager.previewScrollView = scrollView
+                    }
+                    .frame(width: 0, height: 0)
+                }
+                
                 VStack(alignment: .leading, spacing: 0) {
                     if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                         Text("Nothing to preview yet.")
