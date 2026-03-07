@@ -11,33 +11,33 @@ struct NoteRowView: View {
     private var isSelected: Bool { selectedNote?.id == note.id }
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 10) {
             // Indentation
             Spacer().frame(width: INDENT * CGFloat(depth))
 
             // Note icon
-            Image(systemName: "doc.text")
-                .font(.caption)
-                .foregroundColor(isSelected ? .accentColor : .secondary)
+            Image(systemName: "doc.plaintext.fill")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(isSelected ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.tertiary))
                 .frame(width: 14)
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(note.title.isEmpty ? "Untitled" : note.title)
-                    .font(.callout)
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .lineLimit(1)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(isSelected ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.primary))
 
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     Text(formattedDate)
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundStyle(.secondary)
 
                     if !note.contentPreview.isEmpty {
-                        Text("·")
-                            .font(.caption2)
-                            .foregroundStyle(.quaternary)
+                        Text("•")
+                            .font(.system(size: 9, weight: .black))
+                            .foregroundStyle(.tertiary)
                         Text(note.contentPreview)
-                            .font(.caption2)
+                            .font(.system(size: 11, weight: .regular, design: .rounded))
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                     }
@@ -46,14 +46,21 @@ struct NoteRowView: View {
 
             Spacer()
         }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(isSelected
-                      ? Color.accentColor.opacity(0.14)
-                      : Color.clear)
-        )
+        .padding(.vertical, 8)
+        .padding(.horizontal, 10)
+        .background {
+            if isSelected {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .strokeBorder(Color.primary.opacity(0.05), lineWidth: 1)
+                    )
+                    .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
+            } else {
+                Color.clear
+            }
+        }
         .contentShape(Rectangle())
         .onTapGesture {
             selectedNote = note

@@ -24,7 +24,7 @@ struct FolderRowView: View {
     private let INDENT: CGFloat = 18
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
+        VStack(alignment: .leading, spacing: 4) {
             // ── Folder header row ──
             folderHeader
 
@@ -83,16 +83,16 @@ struct FolderRowView: View {
     // MARK: - Folder Header Row
 
     private var folderHeader: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 6) {
             // Indentation
             Spacer().frame(width: INDENT * CGFloat(depth))
 
             // Expand / collapse chevron
             Button {
-                withAnimation(.easeInOut(duration: 0.18)) { isExpanded.toggle() }
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { isExpanded.toggle() }
             } label: {
                 Image(systemName: "chevron.right")
-                    .font(.caption2.weight(.semibold))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.secondary)
                     .rotationEffect(.degrees(isExpanded ? 90 : 0))
                     .frame(width: 14)
@@ -102,18 +102,18 @@ struct FolderRowView: View {
             // Folder icon
             Image(systemName: "folder.fill")
                 .foregroundColor(.accentColor)
-                .font(.callout)
+                .font(.system(size: 14, weight: .medium))
 
             // Name or rename field
             if isRenaming {
                 TextField("Folder name", text: $renamingText)
                     .textFieldStyle(.plain)
-                    .font(.callout.weight(.medium))
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .onSubmit { commitRename() }
                     .onExitCommand { isRenaming = false }
             } else {
                 Text(folder.name)
-                    .font(.callout.weight(.medium))
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .lineLimit(1)
             }
 
@@ -122,24 +122,32 @@ struct FolderRowView: View {
             // Note count badge
             if let count = folder.notes?.count, count > 0 {
                 Text("\(count)")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-                    .padding(.trailing, 4)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.primary.opacity(0.06), in: Capsule())
             }
         }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(
-                    isDropTargeted ? Color.accentColor.opacity(0.14) :
-                    (focusedFolder?.id == folder.id ? Color.primary.opacity(0.06) : Color.clear)
-                )
-        )
+        .padding(.vertical, 8)
+        .padding(.horizontal, 10)
+        .background {
+            if isDropTargeted || focusedFolder?.id == folder.id {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .strokeBorder(Color.primary.opacity(0.05), lineWidth: 1)
+                    )
+                    .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
+            } else {
+                Color.clear
+            }
+        }
         .contentShape(Rectangle())
         .onTapGesture {
             focusedFolder = folder
-            withAnimation(.easeInOut(duration: 0.18)) { isExpanded.toggle() }
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { isExpanded.toggle() }
         }
         .contextMenu {
             Button("New Note in \"\(folder.name)\"") {

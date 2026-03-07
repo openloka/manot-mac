@@ -44,42 +44,48 @@ struct SidebarView: View {
     // MARK: - Search Bar
 
     private var searchBar: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.secondary)
 
-            TextField("Search", text: $searchText)
+            TextField("Search notes...", text: $searchText)
                 .textFieldStyle(.plain)
-                .font(.callout)
+                .font(.system(size: 14, weight: .medium, design: .rounded))
 
             if !searchText.isEmpty {
                 Button {
-                    withAnimation(.easeOut(duration: 0.15)) { searchText = "" }
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { searchText = "" }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
                 .transition(.scale.combined(with: .opacity))
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 7)
-        .background(
-            RoundedRectangle(cornerRadius: 7, style: .continuous)
-                .fill(.ultraThinMaterial)
-        )
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 12)
         .padding(.vertical, 10)
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(.ultraThinMaterial)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(Color.primary.opacity(0.05), lineWidth: 1)
+        }
+        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+        .padding(.bottom, 8)
     }
 
     // MARK: - Tree View
 
     private var treeView: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 1) {
+            LazyVStack(alignment: .leading, spacing: 4) {
 
                 // ── Inline new-root-folder row ──
                 if isCreatingRootFolder {
@@ -88,7 +94,7 @@ struct SidebarView: View {
                     } onCancel: {
                         isCreatingRootFolder = false
                     }
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 12)
                 }
 
                 // ── Root folders ──
@@ -110,7 +116,7 @@ struct SidebarView: View {
                     ) {
                         deleteNote(note)
                     }
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 12)
                 }
 
                 // ── Bottom root-level drop zone ──
@@ -121,7 +127,7 @@ struct SidebarView: View {
                     emptyState
                 }
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 8)
         }
         .scrollContentBackground(.hidden)
         .background(.ultraThinMaterial)
