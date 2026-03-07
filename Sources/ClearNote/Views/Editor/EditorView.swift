@@ -252,40 +252,163 @@ struct EditorView: View {
     // MARK: - Example Markdown
 
     private static let exampleMarkdown = """
-    # Welcome to ClearNote
-    This is an **advanced** Markdown editor built for speed and aesthetics.
+    Here’s a complete example Markdown document that demonstrates many common Markdown features (headings, formatting, lists, tables, code blocks, links, images, quotes, etc.).
 
-    ## Features
-    - **Syntax Highlighting** for both inline `code` and multiline code blocks
-    - **Table of Contents** navigation pane automatically generated
-    - Live and Split **Preview** modes with elegant typography
-    - Cloud Sync supported
+    # Sample Markdown Document
 
-    ### Code Support
-    Here is a multiline block with `javascript` highlighting enabled:
+    Welcome to this **Markdown example**. This document demonstrates common Markdown syntax and features.
+
+    ---
+
+    ## Table of Contents
+    1. [Text Formatting](#text-formatting)
+    2. [Lists](#lists)
+    3. [Links](#links)
+    4. [Images](#images)
+    5. [Code Blocks](#code-blocks)
+    6. [Tables](#tables)
+    7. [Blockquotes](#blockquotes)
+    8. [Task Lists](#task-lists)
+
+    ---
+
+    ## Text Formatting
+
+    You can style text in different ways:
+
+    - **Bold text**
+    - *Italic text*
+    - ***Bold and italic***
+    - ~~Strikethrough~~
+    - `Inline code`
+
+    Example sentence:
+
+    > Markdown makes writing documentation **simple** and *readable*.
+
+    ---
+
+    ## Lists
+
+    ### Unordered List
+    - Apple
+    - Banana
+    - Orange
+      - Mandarin
+      - Blood orange
+
+    ### Ordered List
+    1. Install Markdown editor
+    2. Write content
+    3. Preview document
+    4. Export or publish
+
+    ---
+
+    ## Links
+
+    Example of a link:
+
+    [Visit OpenAI](https://openai.com)
+
+    You can also write automatic links:
+
+    https://github.com
+
+    ---
+
+    ## Images
+
+    Example image syntax:
+
+    ![Markdown Logo](https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg)
+
+    ---
+
+    ## Code Blocks
+
+    Inline code example:
+
+    `npm install`
+
+    Multi-line code block:
 
     ```javascript
-    function greet() {
-        console.log("Hello, World!");
-        alert('Welcome!');
+    function greet(name) {
+      return `Hello, ${name}!`;
     }
+
+    console.log(greet("World"));
     ```
 
-    And here is one for `swift`:
-    
-    ```swift
-    @MainActor
-    func updateUI() {
-        let editor = EditorView()
-        print(editor)
-    }
+    Example Bash command:
+
+    ```bash
+    git clone https://github.com/example/repo.git
+    cd repo
+    npm install
     ```
 
-    ### Focus on Typography
-    Enjoy native feeling formatting elements:
-    > "Design is not just what it looks like and feels like. Design is how it works."
-    
-    You can even mix **_bold and italic_** text properly.
+    ---
+
+    ## Tables
+
+    | Name    | Role          | Experience |
+    | ------- | ------------- | ---------- |
+    | Alice   | Developer     | 5 years    |
+    | Bob     | Designer      | 3 years    |
+    | Carol   | Product Mgr   | 7 years    |
+
+    ---
+
+    ## Blockquotes
+
+    > Markdown is a lightweight markup language for creating formatted text using a plain-text editor.
+
+    Nested quote:
+
+    > First level quote
+    >> Second level quote
+
+    ---
+
+    ## Task Lists
+    - [x] Write Markdown example
+    - [x] Add formatting examples
+    - [ ] Add more advanced sections
+    - [ ] Publish documentation
+
+    ---
+
+    ## Horizontal Rule
+
+    You can separate sections using:
+
+    ---
+
+    ## Footnotes
+
+    Here is a statement with a footnote.[^1]
+
+    [^1]: This is the footnote explanation.
+
+    ---
+
+    ## Conclusion
+
+    Markdown is widely used for:
+    - Documentation
+    - README files
+    - Static site generators
+    - Note-taking apps
+
+    Because it is simple, portable, and easy to read.
+
+    If you want, I can also show:
+    - **Advanced Markdown example (GitHub README style)**
+    - **Real project documentation example**
+    - **Markdown cheatsheet**
+    - **Markdown for blogs or technical docs**
     """
 
     // MARK: - Zen Mode
