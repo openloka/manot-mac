@@ -26,7 +26,7 @@ struct SyntaxTextEditor: NSViewRepresentable {
         textView.isAutomaticTextReplacementEnabled = false
         textView.isAutomaticSpellingCorrectionEnabled = true
         textView.isContinuousSpellCheckingEnabled = true
-        textView.font = NSFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+        textView.font = NSFont.systemFont(ofSize: 14, weight: .regular)
         textView.textContainerInset = NSSize(width: 24, height: 24)
         textView.textContainer?.lineFragmentPadding = 0
         textView.string = text
@@ -158,16 +158,16 @@ struct SyntaxTextEditor: NSViewRepresentable {
         // Reset to base style
         storage.beginEditing()
         storage.setAttributes([
-            .font: NSFont.monospacedSystemFont(ofSize: 14, weight: .regular),
+            .font: NSFont.systemFont(ofSize: 14, weight: .regular),
             .foregroundColor: NSColor.labelColor
         ], range: fullRange)
 
         // H1 – H4
         let headerPatterns: [(String, NSFont, CGFloat)] = [
-            ("^#{1} .+$", .monospacedSystemFont(ofSize: 24, weight: .bold), 0),
-            ("^#{2} .+$", .monospacedSystemFont(ofSize: 20, weight: .bold), 0),
-            ("^#{3} .+$", .monospacedSystemFont(ofSize: 17, weight: .semibold), 0),
-            ("^#{4} .+$", .monospacedSystemFont(ofSize: 15, weight: .semibold), 0),
+            ("^#{1} .+$", .systemFont(ofSize: 24, weight: .bold), 0),
+            ("^#{2} .+$", .systemFont(ofSize: 20, weight: .bold), 0),
+            ("^#{3} .+$", .systemFont(ofSize: 17, weight: .semibold), 0),
+            ("^#{4} .+$", .systemFont(ofSize: 15, weight: .semibold), 0),
         ]
         for (pattern, font, _) in headerPatterns {
             applyRegex(pattern, options: [.anchorsMatchLines], to: storage, text: text, attrs: [
@@ -178,13 +178,13 @@ struct SyntaxTextEditor: NSViewRepresentable {
 
         // Bold: **text**
         applyRegex(#"\*\*[^*]+\*\*"#, to: storage, text: text, attrs: [
-            .font: NSFont.monospacedSystemFont(ofSize: 14, weight: .bold),
+            .font: NSFont.systemFont(ofSize: 14, weight: .bold),
             .foregroundColor: NSColor.labelColor
         ])
 
         // Italic: _text_ or *text*
         applyRegex(#"(?<!\*)\*(?!\*)[^*]+\*(?!\*)"#, to: storage, text: text, attrs: [
-            .font: NSFont.monospacedSystemFont(ofSize: 14, weight: .regular).italic(),
+            .font: NSFont.systemFont(ofSize: 14, weight: .regular).italic(),
             .foregroundColor: NSColor.labelColor
         ])
 
@@ -205,13 +205,13 @@ struct SyntaxTextEditor: NSViewRepresentable {
         // Blockquote: > text
         applyRegex("^> .+$", options: [.anchorsMatchLines], to: storage, text: text, attrs: [
             .foregroundColor: NSColor.secondaryLabelColor,
-            .font: NSFont.monospacedSystemFont(ofSize: 14, weight: .regular).italic()
+            .font: NSFont.systemFont(ofSize: 14, weight: .regular).italic()
         ])
 
         // List markers: - / * / + / 1.
         applyRegex(#"^(\s*[-*+]|\s*\d+\.)\s"#, options: [.anchorsMatchLines], to: storage, text: text, attrs: [
             .foregroundColor: NSColor.controlAccentColor,
-            .font: NSFont.monospacedSystemFont(ofSize: 14, weight: .semibold)
+            .font: NSFont.systemFont(ofSize: 14, weight: .semibold)
         ])
 
         // Links: [label](url)
