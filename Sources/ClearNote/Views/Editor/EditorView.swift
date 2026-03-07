@@ -166,6 +166,17 @@ struct EditorView: View {
 
         ToolbarItemGroup(placement: .primaryAction) {
             Button {
+                let textToInsert = (note.content.isEmpty ? "" : "\n\n") + EditorView.exampleMarkdown
+                note.content += textToInsert
+                scheduleAutoSave()
+            } label: {
+                Image(systemName: "wand.and.stars")
+            }
+            .help("Insert Example Markdown")
+
+            Divider()
+
+            Button {
                 insertMarkdown("**", "**")
             } label: {
                 Image(systemName: "bold")
@@ -226,6 +237,45 @@ struct EditorView: View {
             userInfo: ["prefix": prefix, "suffix": suffix]
         )
     }
+
+    // MARK: - Example Markdown
+
+    private static let exampleMarkdown = """
+    # Welcome to ClearNote
+    This is an **advanced** Markdown editor built for speed and aesthetics.
+
+    ## Features
+    - **Syntax Highlighting** for both inline `code` and multiline code blocks
+    - **Table of Contents** navigation pane automatically generated
+    - Live and Split **Preview** modes with elegant typography
+    - Cloud Sync supported
+
+    ### Code Support
+    Here is a multiline block with `javascript` highlighting enabled:
+
+    ```javascript
+    function greet() {
+        console.log("Hello, World!");
+        alert('Welcome!');
+    }
+    ```
+
+    And here is one for `swift`:
+    
+    ```swift
+    @MainActor
+    func updateUI() {
+        let editor = EditorView()
+        print(editor)
+    }
+    ```
+
+    ### Focus on Typography
+    Enjoy native feeling formatting elements:
+    > "Design is not just what it looks like and feels like. Design is how it works."
+    
+    You can even mix **_bold and italic_** text properly.
+    """
 
     // MARK: - Parsing Headings
     
