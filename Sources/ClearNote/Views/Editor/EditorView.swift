@@ -145,14 +145,22 @@ struct EditorView: View {
                 case .edit:
                     syntaxEditor
                 case .preview:
-                    MarkdownPreviewView(content: note.content, scrollSyncManager: scrollSyncManager)
+                    MarkdownPreviewView(
+                        content: note.content,
+                        scrollSyncManager: scrollSyncManager,
+                        onToggleTask: { lineIndex in toggleTask(at: lineIndex) }
+                    )
                 case .split:
                     HSplitView {
                         syntaxEditor
                             .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
-                        
-                        MarkdownPreviewView(content: note.content, scrollSyncManager: scrollSyncManager)
-                            .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
+
+                        MarkdownPreviewView(
+                            content: note.content,
+                            scrollSyncManager: scrollSyncManager,
+                            onToggleTask: { lineIndex in toggleTask(at: lineIndex) }
+                        )
+                        .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
             }
@@ -298,6 +306,34 @@ struct EditorView: View {
             object: nil,
             userInfo: ["prefix": prefix, "suffix": suffix]
         )
+    }
+
+    // MARK: - Task Toggle
+
+    /// Toggles the `[ ]` / `[x]` marker on the line at `lineIndex` in `note.content`.
+    private func toggleTask(at lineIndex: Int) {
+        var lines = note.content.components(separatedBy: "\n")
+        guard lineIndex < lines.count else { return }
+        let line = lines[lineIndex]
+        let indent = String(line.prefix(while: { $0 == " " }))
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+
+        let toggled: String
+        if trimmed.hasPrefix("- [ ] ") {
+            toggled = indent + "- [x] " + String(trimmed.dropFirst(6))
+        } else if trimmed.hasPrefix("- [x] ") || trimmed.hasPrefix("- [X] ") {
+            toggled = indent + "- [ ] " + String(trimmed.dropFirst(6))
+        } else if trimmed.hasPrefix("* [ ] ") {
+            toggled = indent + "* [x] " + String(trimmed.dropFirst(6))
+        } else if trimmed.hasPrefix("* [x] ") || trimmed.hasPrefix("* [X] ") {
+            toggled = indent + "* [ ] " + String(trimmed.dropFirst(6))
+        } else {
+            return
+        }
+
+        lines[lineIndex] = toggled
+        note.content = lines.joined(separator: "\n")
+        scheduleAutoSave()
     }
 
     // MARK: - Example Markdown
@@ -580,29 +616,71 @@ struct TableOfContentsView: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 2) {
                     ForEach(headings) { heading in
-                        Button {
-                            NotificationCenter.default.post(
-                                name: NSNotification.Name("jumpToRange"),
-                                object: nil,
-                                userInfo: ["range": heading.range]
-                            )
-                        } label: {
-                            Text(heading.text)
-                                .font(.system(size: 13, weight: heading.level == 1 ? .semibold : .regular, design: .rounded))
-                                .foregroundColor(heading.level == 1 ? .primary : .secondary)
-                                .lineLimit(1)
-                                .padding(.vertical, 4)
-                                .padding(.leading, CGFloat((heading.level - 1) * 12))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
-                        .padding(.horizontal, 16)
+                        TOCButtonRow(heading: heading)
                     }
                 }
                 .padding(.bottom, 16)
             }
         }
         .background(.ultraThinMaterial)
+    }
+}
+
+struct TOCButtonRow: View {
+    let heading: HeadingItem
+    @State private var isHovered = false
+
+    var body: some View {
+        Button {
+            // Jump in editor (edit/split mode)
+            NotificationCenter.default.post(
+                name: NSNotification.Name("jumpToRange"),
+                object: nil,
+                userInfo: ["range": heading.range]
+            )
+            // Jump in preview (preview/split mode)
+            let headingID = heading.text
+                .lowercased()
+                .replacingOccurrences(of: " ", with: "-")
+            NotificationCenter.default.post(
+                name: NSNotification.Name("jumpToHeadingID"),
+                object: nil,
+                userInfo: ["headingID": headingID]
+            )
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "link")
+                    .font(.system(size: 10))
+                    .foregroundColor(.accentColor)
+                    .opacity(isHovered ? 1 : 0)
+                Text(heading.text)
+                    .font(.system(size: 13, weight: heading.level == 1 ? .semibold : .regular, design: .rounded))
+                    .foregroundColor(isHovered ? .accentColor : (heading.level == 1 ? .primary : .secondary))
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.vertical, 4)
+            .padding(.leading, CGFloat((heading.level - 1) * 12))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(Color.accentColor.opacity(isHovered ? 0.08 : 0))
+            )
+            // onHover lives INSIDE the label so .buttonStyle(.plain) cannot
+            // intercept and reset the cursor before our handler fires.
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.1)) {
+                    isHovered = hovering
+                }
+                if hovering {
+                    NSCursor.pointingHand.push()
+                } else {
+                    NSCursor.pop()
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 16)
     }
 }

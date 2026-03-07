@@ -53,13 +53,21 @@ struct SyntaxTextEditor: NSViewRepresentable {
         if let scrollSyncManager = scrollSyncManager {
             scrollSyncManager.editorScrollView = scrollView
         }
-        
+
         guard let textView = scrollView.documentView as? NSTextView else { return }
-        // Only update if the string genuinely changed outside to prevent cursor jumps
-        if textView.string != text {
-            textView.string = text
-            applyHighlighting(to: textView)
-        }
+        guard let storage = textView.textStorage else { return }
+        // Bail early if nothing changed — avoids any unnecessary work.
+        guard storage.string != text else { return }
+
+        // Using textView.string = … destroys scroll position because AppKit
+        // treats it as a full document reload. Replacing via NSTextStorage is
+        // an incremental edit that preserves layout, scroll, and selection.
+        let fullRange = NSRange(location: 0, length: storage.length)
+        storage.beginEditing()
+        storage.replaceCharacters(in: fullRange, with: text)
+        storage.endEditing()
+
+        applyHighlighting(to: textView)
     }
 
     // MARK: - Coordinator
