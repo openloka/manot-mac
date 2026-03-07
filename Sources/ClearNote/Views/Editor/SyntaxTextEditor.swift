@@ -69,12 +69,20 @@ struct SyntaxTextEditor: NSViewRepresentable {
                 name: NSNotification.Name("insertMarkdown"),
                 object: nil
             )
+            
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleJumpToRange(_:)),
+                name: NSNotification.Name("jumpToRange"),
+                object: nil
+            )
         }
 
         deinit {
             NotificationCenter.default.removeObserver(self)
         }
 
+        @MainActor
         @objc func handleInsertMarkdown(_ notification: Notification) {
             guard let textView = textView,
                   let window = textView.window,
@@ -106,6 +114,22 @@ struct SyntaxTextEditor: NSViewRepresentable {
                     let newRange = NSRange(location: range.location + prefix.count, length: selectedText.count)
                     textView.setSelectedRange(newRange)
                 }
+            }
+        }
+
+        @MainActor
+        @objc func handleJumpToRange(_ notification: Notification) {
+            guard let textView = textView,
+                  let window = textView.window,
+                  window.isKeyWindow,
+                  let userInfo = notification.userInfo,
+                  let range = userInfo["range"] as? NSRange else { return }
+            
+            textView.setSelectedRange(range)
+            textView.scrollRangeToVisible(range)
+            
+            if window.firstResponder != textView {
+                window.makeFirstResponder(textView)
             }
         }
 

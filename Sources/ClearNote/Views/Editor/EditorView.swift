@@ -22,6 +22,7 @@ struct EditorView: View {
     @State private var editorMode: EditorMode = .edit
     @State private var saveTask: Task<Void, Never>?
     @State private var showWordCount = true
+    @State private var headings: [HeadingItem] = []
 
     // MARK: - Computed
 
@@ -49,6 +50,12 @@ struct EditorView: View {
         }
         .toolbar {
             editorToolbar
+        }
+        .onAppear {
+            parseHeadings(from: note.content)
+        }
+        .onChange(of: note.content) { _, newContent in
+            parseHeadings(from: newContent)
         }
     }
 
@@ -78,18 +85,29 @@ struct EditorView: View {
 
     @ViewBuilder
     private var contentArea: some View {
-        switch editorMode {
-        case .edit:
-            syntaxEditor
-        case .preview:
-            MarkdownPreviewView(content: note.content)
-        case .split:
-            HSplitView {
-                syntaxEditor
-                    .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
-                
-                MarkdownPreviewView(content: note.content)
-                    .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
+        HStack(spacing: 0) {
+            Group {
+                switch editorMode {
+                case .edit:
+                    syntaxEditor
+                case .preview:
+                    MarkdownPreviewView(content: note.content)
+                case .split:
+                    HSplitView {
+                        syntaxEditor
+                            .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
+                        
+                        MarkdownPreviewView(content: note.content)
+                            .frame(minWidth: 200, maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            if !headings.isEmpty {
+                Divider()
+                TableOfContentsView(headings: headings)
+                    .frame(width: 220)
             }
         }
     }
@@ -208,8 +226,77 @@ struct EditorView: View {
             userInfo: ["prefix": prefix, "suffix": suffix]
         )
     }
+
+    // MARK: - Parsing Headings
+    
+    private func parseHeadings(from text: String) {
+        var items: [HeadingItem] = []
+        let pattern = "^(#{1,6})\\s+(.+)$"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return }
+        let nsString = text as NSString
+        let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
+        
+        for match in matches {
+            if match.numberOfRanges == 3 {
+                 let levelText = nsString.substring(with: match.range(at: 1))
+                 let titleText = nsString.substring(with: match.range(at: 2))
+                 items.append(HeadingItem(level: levelText.count, text: titleText, range: match.range))
+            }
+        }
+        headings = items
+    }
 }
 
 extension Notification.Name {
     static let insertMarkdown = Notification.Name("insertMarkdown")
+    static let jumpToRange = Notification.Name("jumpToRange")
+}
+
+struct HeadingItem: Identifiable, Hashable {
+    let id = UUID()
+    let level: Int
+    let text: String
+    let range: NSRange
+}
+
+struct TableOfContentsView: View {
+    let headings: [HeadingItem]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Outline")
+                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .foregroundColor(.secondary)
+                .textCase(.uppercase)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 2) {
+                    ForEach(headings) { heading in
+                        Button {
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name("jumpToRange"),
+                                object: nil,
+                                userInfo: ["range": heading.range]
+                            )
+                        } label: {
+                            Text(heading.text)
+                                .font(.system(size: 13, weight: heading.level == 1 ? .semibold : .regular, design: .rounded))
+                                .foregroundColor(heading.level == 1 ? .primary : .secondary)
+                                .lineLimit(1)
+                                .padding(.vertical, 4)
+                                .padding(.leading, CGFloat((heading.level - 1) * 12))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, 16)
+                    }
+                }
+                .padding(.bottom, 16)
+            }
+        }
+        .background(.ultraThinMaterial)
+    }
 }
