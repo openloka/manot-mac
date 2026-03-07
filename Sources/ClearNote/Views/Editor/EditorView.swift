@@ -38,21 +38,65 @@ struct EditorView: View {
     // MARK: - Body
 
     var body: some View {
-        Group {
+        ZStack {
             if isZenMode {
-                zenModeView
-            } else {
-                VStack(spacing: 0) {
+                Color(NSColor.textBackgroundColor)
+                    .ignoresSafeArea()
+            }
+            
+            VStack(spacing: 0) {
+                if isZenMode {
+                    zenTitleBar
+                } else {
                     titleBar
                     Divider()
-                    contentArea
+                }
+
+                contentArea
+                    .frame(maxWidth: isZenMode ? 800 : .infinity)
+
+                if !isZenMode {
                     Divider()
                     statusBar
                 }
-                .toolbar {
-                    editorToolbar
+            }
+
+            if isZenMode {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            withAnimation { isZenMode = false }
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "arrow.down.right.and.arrow.up.left")
+                                Text("EXIT ZEN MODE")
+                            }
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .strokeBorder(Color.primary.opacity(0.1), lineWidth: 1)
+                                .background(Color.primary.opacity(0.05))
+                        )
+                        .padding(20)
+                    }
+                    Spacer()
+                }
+                
+                VStack {
+                    Spacer()
+                    zenToolbar
+                        .padding(.bottom, 40)
                 }
             }
+        }
+        .toolbar {
+            editorToolbar
         }
         .onAppear {
             parseHeadings(from: note.content)
@@ -413,53 +457,6 @@ struct EditorView: View {
 
     // MARK: - Zen Mode
     
-    private var zenModeView: some View {
-        ZStack {
-            Color(NSColor.windowBackgroundColor)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                zenTitleBar
-                
-                contentArea
-                    .frame(maxWidth: 800)
-            }
-            
-            VStack {
-                HStack {
-                    Spacer()
-                    Button {
-                        withAnimation { isZenMode = false }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "arrow.down.right.and.arrow.up.left")
-                            Text("EXIT ZEN MODE")
-                        }
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
-                            .background(Color.white.opacity(0.05))
-                    )
-                    .padding(20)
-                }
-                Spacer()
-            }
-            
-            VStack {
-                Spacer()
-                zenToolbar
-                    .padding(.bottom, 40)
-            }
-        }
-        .preferredColorScheme(.dark)
-    }
-
     private var zenTitleBar: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 6) {
