@@ -83,6 +83,11 @@ struct SyntaxTextEditor: NSViewRepresentable {
                   let prefix = userInfo["prefix"] as? String,
                   let suffix = userInfo["suffix"] as? String else { return }
             
+            // Force focus back to the text view if a toolbar button was clicked
+            if window.firstResponder != textView {
+                window.makeFirstResponder(textView)
+            }
+            
             let range = textView.selectedRange()
             let selectedText = (textView.string as NSString).substring(with: range)
             let replacementText = prefix + selectedText + suffix

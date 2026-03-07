@@ -26,9 +26,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BA001010 /* ClearNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BA001021 /* ClearNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClearNote.entitlements; sourceTree = "<group>"; };
-		BA001022 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		BA002001 /* ClearNoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearNoteApp.swift; sourceTree = "<group>"; };
 		BA002002 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		BA002003 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
@@ -45,6 +42,9 @@
 		BA002014 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
 		BA002015 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		BA002016 /* NewItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemRow.swift; sourceTree = "<group>"; };
+				BA001021 /* ClearNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClearNote.entitlements; sourceTree = "<group>"; };
+				BA001022 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
+				BA001010 /* ClearNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,88 +58,88 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BA001002 /* ClearNote */ = {
-			isa = PBXGroup;
-			children = (
-				BA001004 /* Sources/ClearNote */,
-				BA001021 /* ClearNote.entitlements */,
-				BA001022 /* Info.plist */,
-				BA001003 /* Products */,
-			);
-			name = ClearNote;
-			sourceTree = "<group>";
-		};
+		            BA001002 /* ClearNote */ = {
+            			isa = PBXGroup;
+            			children = (
+            				BA001004,
+				BA001021,
+				BA001022,
+				BA001003,
+            			);
+            			name = "ClearNote";
+            			sourceTree = "<group>";
+            		};
 		BA001003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BA001010 /* ClearNote.app */,
+				BA001010,
 			);
-			name = Products;
+			name = "Products";
 			sourceTree = "<group>";
 		};
-		BA001004 /* Sources/ClearNote */ = {
-			isa = PBXGroup;
-			children = (
-				BA002001 /* ClearNoteApp.swift */,
-				BA001005 /* Models */,
-				BA001006 /* Utilities */,
-				BA001007 /* Views */,
-			);
-			path = Sources/ClearNote;
-			sourceTree = "<group>";
-		};
-		BA001005 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				BA002002 /* Folder.swift */,
-				BA002003 /* Note.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		BA001006 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				BA002004 /* AppCommands.swift */,
-				BA002005 /* ExportService.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
-		BA001007 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				BA002006 /* ContentView.swift */,
-				BA001008 /* Sidebar */,
-				BA001009 /* Editor */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		BA001008 /* Sidebar */ = {
-			isa = PBXGroup;
-			children = (
-				BA002011 /* FolderRowView.swift */,
-				BA002012 /* NoteRowView.swift */,
-				BA002013 /* NoteTransferable.swift */,
-				BA002014 /* SearchResultsView.swift */,
-				BA002015 /* SidebarView.swift */,
-				BA002016 /* NewItemRow.swift */,
-			);
-			path = Sidebar;
-			sourceTree = "<group>";
-		};
-		BA001009 /* Editor */ = {
-			isa = PBXGroup;
-			children = (
-				BA002007 /* EditorView.swift */,
-				BA002008 /* EmptyStateView.swift */,
-				BA002009 /* MarkdownPreviewView.swift */,
-				BA002010 /* SyntaxTextEditor.swift */,
-			);
-			path = Editor;
-			sourceTree = "<group>";
-		};
+		            BA001004 /* ClearNote */ = {
+            			isa = PBXGroup;
+            			children = (
+            				BA002001,
+				BA001005,
+				BA001006,
+				BA001007,
+            			);
+            			path = "Sources/ClearNote";
+            			sourceTree = "<group>";
+            		};
+		            BA001005 /* Models */ = {
+            			isa = PBXGroup;
+            			children = (
+            				BA002002,
+				BA002003,
+            			);
+            			path = "Models";
+            			sourceTree = "<group>";
+            		};
+		            BA001006 /* Utilities */ = {
+            			isa = PBXGroup;
+            			children = (
+            				BA002004,
+				BA002005,
+            			);
+            			path = "Utilities";
+            			sourceTree = "<group>";
+            		};
+		            BA001007 /* Views */ = {
+            			isa = PBXGroup;
+            			children = (
+            				BA002006,
+				BA001008,
+				BA001009,
+            			);
+            			path = "Views";
+            			sourceTree = "<group>";
+            		};
+		            BA001008 /* Sidebar */ = {
+            			isa = PBXGroup;
+            			children = (
+            				BA002011,
+				BA002012,
+				BA002013,
+				BA002014,
+				BA002015,
+				BA002016,
+            			);
+            			path = "Sidebar";
+            			sourceTree = "<group>";
+            		};
+		            BA001009 /* Editor */ = {
+            			isa = PBXGroup;
+            			children = (
+            				BA002007,
+				BA002008,
+				BA002009,
+				BA002010,
+            			);
+            			path = "Editor";
+            			sourceTree = "<group>";
+            		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -172,17 +172,12 @@
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
-			knownRegions = (
-				en,
-				Base,
-			);
-			mainGroup = BA001002 /* ClearNote */;
+			knownRegions = (en, Base);
+			mainGroup = BA001002;
 			productRefGroup = BA001003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			targets = (
-				BA001011 /* ClearNote */,
-			);
+			targets = (BA001011 /* ClearNote */,);
 		};
 /* End PBXProject section */
 
@@ -190,8 +185,7 @@
 		BA001014 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (
-			);
+			files = ();
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
@@ -229,19 +223,16 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -253,14 +244,14 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_OPTIMIZATION_LEVEL = s;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -272,17 +263,16 @@
 				CODE_SIGN_ENTITLEMENTS = ClearNote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YQJ82VB6T9;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.clearnote.app;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.clearnote.app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -292,18 +282,17 @@
 				CODE_SIGN_ENTITLEMENTS = ClearNote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YQJ82VB6T9;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.clearnote.app;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.clearnote.app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -312,23 +301,18 @@
 /* Begin XCConfigurationList section */
 		BA001015 /* Build configuration list for PBXProject "ClearNote" */ = {
 			isa = XCConfigurationList;
-			buildConfigurations = (
-				BA001017 /* Debug */,
-				BA001018 /* Release */,
-			);
+			buildConfigurations = (BA001017 /* Debug */, BA001018 /* Release */);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		BA001016 /* Build configuration list for PBXNativeTarget "ClearNote" */ = {
 			isa = XCConfigurationList;
-			buildConfigurations = (
-				BA001019 /* Debug */,
-				BA001020 /* Release */,
-			);
+			buildConfigurations = (BA001019 /* Debug */, BA001020 /* Release */);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
 	};
 	rootObject = BA001001 /* Project object */;
 }
