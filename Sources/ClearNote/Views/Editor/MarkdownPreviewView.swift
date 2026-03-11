@@ -17,28 +17,39 @@ struct MarkdownPreviewView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                if let scrollSyncManager = scrollSyncManager {
-                    ScrollViewExtractor { scrollView in
-                        scrollSyncManager.previewScrollView = scrollView
+                // Explicit VStack(spacing: 0) is required: without it, SwiftUI's
+                // @ViewBuilder inserts implicit spacing (~8pt) between the probe
+                // and the content, making top padding differ from the editor's
+                // textContainerInset of 24pt.
+                VStack(spacing: 0) {
+                    // Probe INSIDE the ScrollView content so enclosingScrollView()
+                    // walks up to the correct NSScrollView.
+                    if let mgr = scrollSyncManager {
+                        ScrollViewExtractor { scrollView in
+                            mgr.previewScrollView = scrollView
+                        }
+                        .frame(width: 0, height: 0)
                     }
-                    .frame(width: 0, height: 0)
-                }
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        Text("Nothing to preview yet.")
-                            .foregroundStyle(.tertiary)
-                            .italic()
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(.top, 60)
-                    } else {
-                        renderedContent
-                            .padding(.bottom, 40)
+
+                    VStack(alignment: .leading, spacing: 0) {
+                        if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            Text("Nothing to preview yet.")
+                                .foregroundStyle(.tertiary)
+                                .italic()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.top, 60)
+                        } else {
+                            renderedContent
+                                .padding(.bottom, 40)
+                        }
                     }
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 24)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.horizontal, 24)
-                .padding(.vertical, 24)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .onDisappear {
+                scrollSyncManager?.previewScrollView = nil
             }
             .environment(\.openURL, OpenURLAction { url in
                 let stringURL = url.absoluteString
