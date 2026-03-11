@@ -210,15 +210,15 @@ struct SyntaxTextEditor: NSViewRepresentable {
         // Inline code: `code`
         applyRegex(#"`[^`\n]+`"#, to: storage, text: text, attrs: [
             .font: NSFont.monospacedSystemFont(ofSize: 13, weight: .regular),
-            .foregroundColor: NSColor.systemGreen,
-            .backgroundColor: NSColor.systemGreen.withAlphaComponent(0.08)
+            .foregroundColor: NSColor.systemGray,
+            .backgroundColor: NSColor.systemGray.withAlphaComponent(0.08)
         ])
 
         // Block code: ``` fences
         applyRegex(#"```[\s\S]*?```"#, to: storage, text: text, attrs: [
             .font: NSFont.monospacedSystemFont(ofSize: 13, weight: .regular),
-            .foregroundColor: NSColor.systemGreen,
-            .backgroundColor: NSColor.systemGreen.withAlphaComponent(0.06)
+            .foregroundColor: NSColor.systemGray,
+            .backgroundColor: NSColor.systemGray.withAlphaComponent(0.06)
         ])
 
         // Blockquote: > text
