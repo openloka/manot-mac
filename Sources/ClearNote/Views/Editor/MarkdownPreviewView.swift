@@ -264,6 +264,7 @@ struct MarkdownPreviewView: View {
                     .font(.body)
                     .lineSpacing(3)
                     .textSelection(.enabled)
+                    .tint(.primary)
             }
         }
     }
@@ -389,7 +390,7 @@ struct MarkdownPreviewView: View {
     private func listItemLine(_ text: String, indent: Int) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Text(indent % 2 == 0 ? "•" : "◦")
-                .foregroundColor(.accentColor)
+                .foregroundColor(.primary)
             Text(markdownInline(text))
                 .font(.body)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -401,7 +402,7 @@ struct MarkdownPreviewView: View {
     private func orderedListItemLine(_ prefix: String, text: String, indent: Int) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Text(prefix)
-                .foregroundColor(.accentColor)
+                .foregroundColor(.primary)
                 .font(.body.monospacedDigit())
             Text(markdownInline(text))
                 .font(.body)
@@ -592,6 +593,7 @@ struct LinkTextLine: View {
         Text(attributed)
             .font(.body)
             .lineSpacing(3)
+            .tint(.primary)
             .onHover { hovering in
                 isHovered = hovering
                 if hovering {

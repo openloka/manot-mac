@@ -191,7 +191,7 @@ struct SyntaxTextEditor: NSViewRepresentable {
         for (pattern, font, _) in headerPatterns {
             applyRegex(pattern, options: [.anchorsMatchLines], to: storage, text: text, attrs: [
                 .font: font,
-                .foregroundColor: NSColor.controlAccentColor
+                .foregroundColor: NSColor.labelColor
             ])
         }
 
@@ -229,13 +229,13 @@ struct SyntaxTextEditor: NSViewRepresentable {
 
         // List markers: - / * / + / 1.
         applyRegex(#"^(\s*[-*+]|\s*\d+\.)\s"#, options: [.anchorsMatchLines], to: storage, text: text, attrs: [
-            .foregroundColor: NSColor.controlAccentColor,
+            .foregroundColor: NSColor.labelColor,
             .font: NSFont.systemFont(ofSize: 14, weight: .semibold)
         ])
 
         // Links: [label](url)
         applyRegex(#"\[.+?\]\(.+?\)"#, to: storage, text: text, attrs: [
-            .foregroundColor: NSColor.systemBlue,
+            .foregroundColor: NSColor.labelColor,
             .underlineStyle: NSUnderlineStyle.single.rawValue
         ])
 
