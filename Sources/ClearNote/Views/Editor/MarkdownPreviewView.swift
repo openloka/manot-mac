@@ -222,7 +222,7 @@ struct MarkdownPreviewView: View {
                 .padding(.top, 20)
                 .padding(.bottom, 4)
         } else if line.hasPrefix("## ") {
-            Text(downInline(String(line.dropFirst(3))))
+            Text(markdownInline(String(line.dropFirst(3))))
                 .font(.system(size: h2Size, weight: .bold))
                 .foregroundColor(.primary)
                 .padding(.top, 16)
