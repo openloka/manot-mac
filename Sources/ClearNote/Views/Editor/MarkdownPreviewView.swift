@@ -1,9 +1,18 @@
 import SwiftUI
+import Highlighter
 
 struct MarkdownPreviewView: View {
     let content: String
     var scrollSyncManager: ScrollSyncManager?
     var onToggleTask: ((Int) -> Void)?
+
+    // MARK: - Shared style constants (must mirror MarkdownHighlighter.swift)
+    private let baseBodySize:  CGFloat = 14   // matches baseFont ofSize: 14
+    private let codeSize:      CGFloat = 13   // matches monospacedSystemFont ofSize: 13
+    private let h1Size:        CGFloat = 24   // matches heading level 1
+    private let h2Size:        CGFloat = 20   // matches heading level 2
+    private let h3Size:        CGFloat = 17   // matches heading level 3
+    private let h4Size:        CGFloat = 15   // matches heading level 4+
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -67,16 +76,18 @@ struct MarkdownPreviewView: View {
                     for (index, line) in lines.enumerated() {
                         let trimmed = line.trimmingCharacters(in: .whitespaces)
                         if trimmed.hasPrefix("#") {
-                            let pattern = "^(#{1,6})\\s+(.+)$"
-                            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
-                            if let match = regex.firstMatch(in: trimmed, range: NSRange(location: 0, length: (trimmed as NSString).length)) {
-                                let titleText = (trimmed as NSString).substring(with: match.range(at: 2))
-                                let generatedID = titleText.lowercased().replacingOccurrences(of: " ", with: "-")
-                                if generatedID == headingID {
-                                    withAnimation {
-                                        proxy.scrollTo(index, anchor: .top)
+                            let hashesCount = trimmed.prefix(while: { $0 == "#" }).count
+                            if hashesCount > 0 && hashesCount <= 6 {
+                                let startIndex = trimmed.index(trimmed.startIndex, offsetBy: hashesCount)
+                                if startIndex < trimmed.endIndex, trimmed[startIndex].isWhitespace {
+                                    let titleText = String(trimmed[startIndex...]).trimmingCharacters(in: .whitespaces)
+                                    let generatedID = titleText.lowercased().replacingOccurrences(of: " ", with: "-")
+                                    if generatedID == headingID {
+                                        withAnimation {
+                                            proxy.scrollTo(index, anchor: .top)
+                                        }
+                                        break
                                     }
-                                    break
                                 }
                             }
                         }
@@ -206,21 +217,25 @@ struct MarkdownPreviewView: View {
         
         if line.hasPrefix("# ") {
             Text(markdownInline(String(line.dropFirst(2))))
-                .font(.largeTitle.bold())
+                .font(.system(size: h1Size, weight: .bold))
+                .foregroundColor(.primary)
                 .padding(.top, 20)
                 .padding(.bottom, 4)
         } else if line.hasPrefix("## ") {
-            Text(markdownInline(String(line.dropFirst(3))))
-                .font(.title.bold())
+            Text(downInline(String(line.dropFirst(3))))
+                .font(.system(size: h2Size, weight: .bold))
+                .foregroundColor(.primary)
                 .padding(.top, 16)
                 .padding(.bottom, 2)
         } else if line.hasPrefix("### ") {
             Text(markdownInline(String(line.dropFirst(4))))
-                .font(.title2.bold())
+                .font(.system(size: h3Size, weight: .semibold))
+                .foregroundColor(.primary)
                 .padding(.top, 12)
         } else if line.hasPrefix("#### ") {
             Text(markdownInline(String(line.dropFirst(5))))
-                .font(.title3.bold())
+                .font(.system(size: h4Size, weight: .semibold))
+                .foregroundColor(.primary)
                 .padding(.top, 8)
         } else if line.hasPrefix("    ") {
             codeBlockLine(line)
@@ -244,27 +259,33 @@ struct MarkdownPreviewView: View {
             blockquoteLine(String(trimmed.dropFirst(3)), level: 2)
         } else if trimmed.hasPrefix("> ") {
             blockquoteLine(String(trimmed.dropFirst(2)), level: 1)
-        } else if let range = trimmed.range(of: "^[-*+]\\s+", options: .regularExpression) {
-            let text = String(trimmed[range.upperBound...])
+        } else if trimmed.hasPrefix("- ") || trimmed.hasPrefix("* ") || trimmed.hasPrefix("+ ") {
+            let text = String(trimmed.dropFirst(2))
             listItemLine(text, indent: indentLevel)
-        } else if let range = trimmed.range(of: "^\\d+\\.\\s+", options: .regularExpression) {
-            let prefix = String(trimmed[..<range.upperBound]).trimmingCharacters(in: .whitespaces)
-            let text = String(trimmed[range.upperBound...])
+        } else if let dotIndex = trimmed.firstIndex(of: "."), 
+                  dotIndex != trimmed.startIndex,
+                  trimmed[..<dotIndex].allSatisfy({ $0.isNumber }),
+                  trimmed.index(after: dotIndex) < trimmed.endIndex,
+                  trimmed[trimmed.index(after: dotIndex)].isWhitespace {
+            let prefix = String(trimmed[...dotIndex])
+            let text = String(trimmed.dropFirst(prefix.count)).trimmingCharacters(in: .whitespaces)
             orderedListItemLine(prefix, text: text, indent: indentLevel)
-        } else if trimmed.range(of: "^\\[\\^.*\\]:", options: .regularExpression) != nil {
+        } else if trimmed.hasPrefix("[^") && trimmed.contains("]:") {
             footnoteLine(trimmed)
         } else if trimmed.isEmpty {
             Spacer().frame(height: 8)
         } else {
-            let containsLink = line.contains("](") || line.contains("http://") || line.contains("https://")
-            if containsLink {
-                LinkTextLine(attributed: markdownInline(line))
+            let attrLine = markdownInline(line)
+            let hasLink = attrLine.runs.contains(where: { $0.link != nil })
+
+            if hasLink {
+                LinkTextLine(attributed: attrLine)
             } else {
-                Text(markdownInline(line))
-                    .font(.body)
+                Text(attrLine)
+                    .font(.system(size: baseBodySize))
                     .lineSpacing(3)
                     .textSelection(.enabled)
-                    .tint(.primary)
+                    .tint(.accentColor)
             }
         }
     }
@@ -317,58 +338,36 @@ struct MarkdownPreviewView: View {
     }
 
     private func syntaxHighlight(_ code: String, language: String) -> AttributedString {
-        var attrStr = AttributedString(code)
-        attrStr.font = .system(.body, design: .monospaced)
-        attrStr.foregroundColor = .primary
+        // Use the same Highlighter library + xcode theme as the editor (MarkdownHighlighter.swift)
+        let highlighter = Highlighter()
+        highlighter?.setTheme("xcode")
 
-        let nsCode = code as NSString
-        let fullRange = NSRange(location: 0, length: nsCode.length)
-        
-        let lang = language.lowercased()
-        
-        // Base highlighting for strings
-        if let regex = try? NSRegularExpression(pattern: "(\"[^\"]*\"|'[^']*'|`[^`]*`)") {
-            for match in regex.matches(in: code, range: fullRange) {
-                if let range = Range(match.range, in: attrStr) {
-                    attrStr[range].foregroundColor = .systemOrange
+        if let highlighted = highlighter?.highlight(code, as: language.isEmpty ? nil : language) {
+            // Convert NSAttributedString -> AttributedString
+            let monoFont = NSFont.monospacedSystemFont(ofSize: 13, weight: .regular)
+            let mutable = NSMutableAttributedString(attributedString: highlighted)
+            let fullRange = NSRange(location: 0, length: mutable.length)
+
+            // Guarantee monospaced font throughout
+            mutable.enumerateAttribute(.font, in: fullRange, options: []) { value, range, _ in
+                if let font = value as? NSFont {
+                    let merged = NSFont(descriptor: font.fontDescriptor.withSymbolicTraits(font.fontDescriptor.symbolicTraits), size: 13) ?? monoFont
+                    mutable.addAttribute(.font, value: merged, range: range)
+                } else {
+                    mutable.addAttribute(.font, value: monoFont, range: range)
                 }
+            }
+
+            if let result = try? AttributedString(mutable, including: \.appKit) {
+                return result
             }
         }
 
-        // Language specific
-        if lang == "javascript" || lang == "js" {
-            let keywords = ["function", "const", "let", "var", "if", "else", "for", "while", "return", "import", "export", "from", "class", "default", "new", "await", "async"]
-            let keywordPattern = "\\b(\(keywords.joined(separator: "|")))\\b"
-            if let regex = try? NSRegularExpression(pattern: keywordPattern) {
-                for match in regex.matches(in: code, range: fullRange) {
-                    if let range = Range(match.range, in: attrStr) {
-                        attrStr[range].foregroundColor = .systemPink
-                    }
-                }
-            }
-            
-            let buildInsPattern = "\\b(console|alert|window|document|Math|Object|Array)\\b"
-            if let regex = try? NSRegularExpression(pattern: buildInsPattern) {
-                for match in regex.matches(in: code, range: fullRange) {
-                    if let range = Range(match.range, in: attrStr) {
-                        attrStr[range].foregroundColor = .systemTeal
-                    }
-                }
-            }
-        } else if lang == "swift" {
-            let keywords = ["func", "let", "var", "if", "else", "guard", "return", "class", "struct", "enum", "extension", "import", "public", "private", "some", "any", "await", "async"]
-            let keywordPattern = "\\b(\(keywords.joined(separator: "|")))\\b"
-            if let regex = try? NSRegularExpression(pattern: keywordPattern) {
-                for match in regex.matches(in: code, range: fullRange) {
-                    if let range = Range(match.range, in: attrStr) {
-                        attrStr[range].foregroundColor = .systemPink
-                    }
-                }
-            }
-        }
-        // Add more languages as needed...
-        
-        return attrStr
+        // Fallback: plain monospaced text
+        var fallback = AttributedString(code)
+        fallback.font = .system(.body, design: .monospaced)
+        fallback.foregroundColor = .primary
+        return fallback
     }
 
     @ViewBuilder
@@ -380,7 +379,8 @@ struct MarkdownPreviewView: View {
                     .frame(width: 3)
             }
             Text(markdownInline(text))
-                .font(.body.italic())
+                // Matches MarkdownHighlighter: secondaryLabelColor + italic
+                .font(.system(size: baseBodySize).italic())
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, 4)
@@ -391,8 +391,9 @@ struct MarkdownPreviewView: View {
         HStack(alignment: .top, spacing: 8) {
             Text(indent % 2 == 0 ? "•" : "◦")
                 .foregroundColor(.primary)
+                .font(.system(size: baseBodySize, weight: .semibold)) // matches list marker styling
             Text(markdownInline(text))
-                .font(.body)
+                .font(.system(size: baseBodySize))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.leading, CGFloat(indent * 20))
@@ -403,9 +404,9 @@ struct MarkdownPreviewView: View {
         HStack(alignment: .top, spacing: 8) {
             Text(prefix)
                 .foregroundColor(.primary)
-                .font(.body.monospacedDigit())
+                .font(.system(size: baseBodySize, weight: .semibold).monospacedDigit())
             Text(markdownInline(text))
-                .font(.body)
+                .font(.system(size: baseBodySize))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.leading, CGFloat(indent * 20))
@@ -467,50 +468,56 @@ struct MarkdownPreviewView: View {
     private func markdownInline(_ text: String) -> AttributedString {
         var str = AttributedString()
         
-        // This regex catches code elements like `this` to extract the text
-        let inlineCodePattern = "`([^`]+)`"
+        let components = text.components(separatedBy: "`")
         
-        if let regex = try? NSRegularExpression(pattern: inlineCodePattern) {
-            let nsString = text as NSString
-            let matches = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
-            
-            if matches.isEmpty {
-                // Standard default string if no code elements present
-                str = (try? AttributedString(markdown: text, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(text)
-            } else {
-                var lastRangeEnd = 0
-                for match in matches {
-                    let textBefore = nsString.substring(with: NSRange(location: lastRangeEnd, length: match.range.location - lastRangeEnd))
-                    if !textBefore.isEmpty {
-                        if let attrText = try? AttributedString(markdown: textBefore, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)) {
-                            str.append(attrText)
-                        } else {
-                            str.append(AttributedString(textBefore))
-                        }
-                    }
-                    
-                    let rawCodeText = nsString.substring(with: match.range(at: 1))
-                    // Add space padding to the inline code
-                    var codeAttr = AttributedString(" \(rawCodeText) ")
-                    codeAttr.font = .system(.body, design: .monospaced)
-                    codeAttr.foregroundColor = .primary
-                    codeAttr.backgroundColor = Color.secondary.opacity(0.15)
+        if components.count >= 3 {
+            for (index, component) in components.enumerated() {
+                if index % 2 == 1 {
+                    // Inline code — matches MarkdownHighlighter:
+                    //   font: monospacedSystemFont(13), foregroundColor: systemGray, background: systemGray 8%
+                    var codeAttr = AttributedString(" \(component) ")
+                    codeAttr.font = .system(size: codeSize, design: .monospaced)
+                    codeAttr.foregroundColor = Color(NSColor.systemGray)
+                    codeAttr.backgroundColor = Color(NSColor.systemGray).opacity(0.08)
                     str.append(codeAttr)
-                    
-                    lastRangeEnd = match.range.location + match.range.length
-                }
-                
-                if lastRangeEnd < nsString.length {
-                    let trailingText = nsString.substring(from: lastRangeEnd)
-                    if let attrTrailing = try? AttributedString(markdown: trailingText, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)) {
-                        str.append(attrTrailing)
+                } else if !component.isEmpty {
+                    if let attrText = try? AttributedString(markdown: component, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)) {
+                        str.append(attrText)
                     } else {
-                        str.append(AttributedString(trailingText))
+                        str.append(AttributedString(component))
                     }
                 }
             }
         } else {
             str = (try? AttributedString(markdown: text, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(text)
+        }
+        
+        // 1. Explicitly style any existing Markdown links
+        // Use .accentColor which maps to NSColor.linkColor in light/dark (matches MarkdownHighlighter)
+        for run in str.runs {
+            if run.link != nil {
+                let range = run.range
+                str[range].foregroundColor = .accentColor
+                str[range].underlineStyle = .single
+            }
+        }
+        
+        // 2. NSDataDetector for raw URLs — same detector used in MarkdownHighlighter.highlight()
+        let plainText = String(str.characters)
+        if let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) {
+            let matches = detector.matches(in: plainText, options: [], range: NSRange(location: 0, length: plainText.utf16.count))
+            for match in matches {
+                if let url = match.url {
+                    if let stringRange = Range(match.range, in: plainText) {
+                        let substring = String(plainText[stringRange])
+                        if let attrRange = str.range(of: substring), str[attrRange].link == nil {
+                            str[attrRange].link = url
+                            str[attrRange].foregroundColor = .accentColor
+                            str[attrRange].underlineStyle = .single
+                        }
+                    }
+                }
+            }
         }
         
         return str
@@ -593,6 +600,7 @@ struct LinkTextLine: View {
         Text(attributed)
             .font(.body)
             .lineSpacing(3)
+            .textSelection(.enabled)
             .tint(.primary)
             .onHover { hovering in
                 isHovered = hovering

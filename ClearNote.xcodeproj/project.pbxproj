@@ -26,6 +26,7 @@
 		BA003016 /* NewItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002016 /* NewItemRow.swift */; };
 		BA003017 /* FolderTransferable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002017 /* FolderTransferable.swift */; };
 		BA003018 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002018 /* ThemeManager.swift */; };
+		F17E366B41F0DABDF39498EA /* MarkdownHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F0F2C55C9227EE983E2CF /* MarkdownHighlighter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		BA002016 /* NewItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemRow.swift; sourceTree = "<group>"; };
 		BA002017 /* FolderTransferable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderTransferable.swift; sourceTree = "<group>"; };
 		BA002018 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		DF1F0F2C55C9227EE983E2CF /* MarkdownHighlighter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MarkdownHighlighter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +78,10 @@
 			isa = PBXGroup;
 			children = (
 				2093BBDAACB2066E44875F1B /* ScrollSyncManager.swift */,
+				DF1F0F2C55C9227EE983E2CF /* MarkdownHighlighter.swift */,
 			);
 			name = Editor;
+			path = Sources/ClearNote/Views/Editor;
 			sourceTree = "<group>";
 		};
 		A54027B5224E9B1C381B7C1F /* ClearNote */ = {
@@ -197,6 +201,10 @@
 			dependencies = (
 			);
 			name = ClearNote;
+			packageProductDependencies = (
+				6D9A0C2F5E17794A35061AB8 /* Markdown */,
+				C0EA8D25EC9B82FF51DB3530 /* Highlighter */,
+			);
 			productName = ClearNote;
 			productReference = BA001010 /* ClearNote.app */;
 			productType = "com.apple.product-type.application";
@@ -218,6 +226,10 @@
 				Base,
 			);
 			mainGroup = BA001002;
+			packageReferences = (
+				8FA89F3DEB3CFF178685377B /* XCRemoteSwiftPackageReference "swift-markdown" */,
+				A21CA116083990EA142CF45B /* XCRemoteSwiftPackageReference "HighlighterSwift" */,
+			);
 			productRefGroup = BA001003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -261,6 +273,7 @@
 				BA003017 /* FolderTransferable.swift in Sources */,
 				96569334151B47454AFA7BB5 /* ScrollSyncManager.swift in Sources */,
 				BA003018 /* ThemeManager.swift in Sources */,
+				F17E366B41F0DABDF39498EA /* MarkdownHighlighter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +386,54 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		47C2CBD76F1716C7DBAD387C /* XCRemoteSwiftPackageReference "HighlighterSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/aibo-cora/HighlighterSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.5;
+			};
+		};
+		8FA89F3DEB3CFF178685377B /* XCRemoteSwiftPackageReference "swift-markdown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftlang/swift-markdown.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		A21CA116083990EA142CF45B /* XCRemoteSwiftPackageReference "HighlighterSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/smittytone/HighlighterSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		D9C1DFC70559865A92ECAD11 /* XCRemoteSwiftPackageReference "swift-markdown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-markdown.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6D9A0C2F5E17794A35061AB8 /* Markdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8FA89F3DEB3CFF178685377B /* XCRemoteSwiftPackageReference "swift-markdown" */;
+			productName = Markdown;
+		};
+		C0EA8D25EC9B82FF51DB3530 /* Highlighter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A21CA116083990EA142CF45B /* XCRemoteSwiftPackageReference "HighlighterSwift" */;
+			productName = Highlighter;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BA001001 /* Project object */;
 }
