@@ -22,7 +22,7 @@ struct ManotApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("Manot") {
             ContentView()
                 .frame(minWidth: 780, minHeight: 520)
                 .environmentObject(themeManager)
