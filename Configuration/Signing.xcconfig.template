@@ -1,0 +1,9 @@
+// Copy this file to Configuration/Signing.xcconfig and fill in your values.
+// Signing.xcconfig is gitignored — never commit it.
+//
+// To find your Team ID:
+//   Xcode → Preferences → Accounts → select your Apple ID → Team ID column
+// Or: https://developer.apple.com/account → Membership → Team ID
+
+DEVELOPMENT_TEAM =
+PRODUCT_BUNDLE_IDENTIFIER = com.clearnote.app

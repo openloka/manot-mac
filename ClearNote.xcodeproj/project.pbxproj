@@ -34,6 +34,7 @@
 		BA001010 /* ClearNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA001021 /* ClearNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClearNote.entitlements; sourceTree = "<group>"; };
 		BA001022 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
+		CF001001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Signing.xcconfig; path = Configuration/Signing.xcconfig; sourceTree = SOURCE_ROOT; };
 		BA002001 /* ClearNoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearNoteApp.swift; sourceTree = "<group>"; };
 		BA002002 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		BA002003 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
@@ -98,6 +99,7 @@
 				BA001004 /* ClearNote */,
 				BA001021 /* ClearNote.entitlements */,
 				BA001022 /* Info.plist */,
+				CF001001 /* Signing.xcconfig */,
 				BA001003 /* Products */,
 				D5F7683D3EFE02A9EFD9BED4 /* Sources */,
 			);
@@ -325,14 +327,13 @@
 		};
 		BA001019 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CF001001 /* Signing.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ClearNote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YQJ82VB6T9;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.clearnote.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
@@ -345,14 +346,13 @@
 		};
 		BA001020 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CF001001 /* Signing.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ClearNote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YQJ82VB6T9;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.clearnote.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
