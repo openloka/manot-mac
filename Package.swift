@@ -18,6 +18,9 @@ let package = Package(
                 .product(name: "Highlighter", package: "HighlighterSwift")
             ],
             path: "Sources/ManotApp",
+            resources: [
+                .process("Assets.xcassets")
+            ],
             swiftSettings: [
                 .swiftLanguageMode(.v6)
             ]
