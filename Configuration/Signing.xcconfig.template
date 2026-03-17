@@ -6,4 +6,4 @@
 // Or: https://developer.apple.com/account → Membership → Team ID
 
 DEVELOPMENT_TEAM =
-PRODUCT_BUNDLE_IDENTIFIER = com.clearnote.app
+PRODUCT_BUNDLE_IDENTIFIER = com.manot.app

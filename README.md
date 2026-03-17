@@ -1,4 +1,4 @@
-# ClearNote
+# ManotApp
 
 A distraction-free, macOS-native Markdown editor with iCloud sync — built with Swift 6, SwiftUI, and SwiftData.
 
@@ -37,8 +37,8 @@ A distraction-free, macOS-native Markdown editor with iCloud sync — built with
 ### 1. Clone and open
 
 ```bash
-git clone https://github.com/your-username/ClearNote.git
-cd ClearNote
+git clone https://github.com/your-username/ManotApp.git
+cd ManotApp
 ```
 
 ### 2. Configure signing
@@ -53,7 +53,7 @@ Edit `Configuration/Signing.xcconfig`:
 
 ```
 DEVELOPMENT_TEAM = YOUR_TEAM_ID
-PRODUCT_BUNDLE_IDENTIFIER = com.yourname.clearnote
+PRODUCT_BUNDLE_IDENTIFIER = com.yourname.manot
 ```
 
 > **Finding your Team ID:** Xcode → Settings → Accounts → select your Apple ID → Team ID column. Or visit [developer.apple.com/account](https://developer.apple.com/account) → Membership.
@@ -63,7 +63,7 @@ PRODUCT_BUNDLE_IDENTIFIER = com.yourname.clearnote
 ### 3. Build and run
 
 ```bash
-open ClearNote.xcodeproj
+open ManotApp.xcodeproj
 ```
 
 Press **⌘R** to build and run.
@@ -72,10 +72,10 @@ Press **⌘R** to build and run.
 
 The app is pre-configured for CloudKit sync. To enable it with your own account:
 
-1. In Xcode, select the ClearNote target → **Signing & Capabilities**
+1. In Xcode, select the ManotApp target → **Signing & Capabilities**
 2. Add the **iCloud** capability and enable **CloudKit**
-3. Set the container identifier to match your bundle ID: `iCloud.com.yourname.clearnote`
-4. Update `ClearNote.entitlements` with your container identifier
+3. Set the container identifier to match your bundle ID: `iCloud.com.yourname.manot`
+4. Update `ManotApp.entitlements` with your container identifier
 5. Sign with your Apple Developer account
 
 Local functionality works fully without these steps.
@@ -95,8 +95,8 @@ Local functionality works fully without these steps.
 ## Project Structure
 
 ```
-Sources/ClearNote/
-├── ClearNoteApp.swift          # @main entry point, ModelContainer setup
+Sources/ManotApp/
+├── ManotApp.swift              # @main entry point, ModelContainer setup
 ├── Models/
 │   ├── Note.swift              # SwiftData Note model
 │   └── Folder.swift            # SwiftData Folder model (recursive)
@@ -127,4 +127,4 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before
 
 ## License
 
-ClearNote is available under the MIT license. See [LICENSE](LICENSE) for details.
+ManotApp is available under the MIT license. See [LICENSE](LICENSE) for details.

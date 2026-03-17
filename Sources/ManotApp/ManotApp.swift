@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct ClearNoteApp: App {
+struct ManotApp: App {
     let modelContainer: ModelContainer
     @StateObject private var themeManager = ThemeManager()
 

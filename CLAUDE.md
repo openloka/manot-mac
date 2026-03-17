@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**ClearNote** is a native macOS Markdown editor built with Swift 6, SwiftUI, and SwiftData, targeting macOS 14.0+.
+**ManotApp** is a native macOS Markdown editor built with Swift 6, SwiftUI, and SwiftData, targeting macOS 14.0+.
 
 ## Build & Run
 
 Open in Xcode and press ⌘R:
 ```bash
-open ClearNote.xcodeproj
+open ManotApp.xcodeproj
 ```
 
 There is no CLI test runner — tests are run via Xcode (⌘U). No linting configuration exists.
@@ -24,7 +24,7 @@ There is no CLI test runner — tests are run via Xcode (⌘U). No linting confi
 
 The app uses MVVM + SwiftUI with SwiftData for persistence.
 
-**Entry point:** `ClearNoteApp.swift` sets up the `ModelContainer` and `ThemeManager`.
+**Entry point:** `ManotApp.swift` sets up the `ModelContainer` and `ThemeManager`.
 
 **Layout:** `ContentView` renders a `NavigationSplitView` with `SidebarView` (left) and `EditorView` (right).
 
@@ -58,4 +58,4 @@ The project uses `.swiftLanguageMode(.v6)` in `Package.swift`. All shared state 
 
 ## iCloud / CloudKit
 
-The app is configured with CloudKit entitlements (`ClearNote.entitlements`) but sync is not yet enabled in production. The `ModelContainer` is set up to support CloudKit when activated.
+The app is configured with CloudKit entitlements (`ManotApp.entitlements`) but sync is not yet enabled in production. The `ModelContainer` is set up to support CloudKit when activated.

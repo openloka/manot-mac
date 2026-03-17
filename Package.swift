@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ClearNote",
+    name: "ManotApp",
     platforms: [
         .macOS(.v14)
     ],
@@ -12,12 +12,12 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "ClearNote",
+            name: "ManotApp",
             dependencies: [
                 .product(name: "Markdown", package: "swift-markdown"),
                 .product(name: "Highlighter", package: "HighlighterSwift")
             ],
-            path: "Sources/ClearNote",
+            path: "Sources/ManotApp",
             swiftSettings: [
                 .swiftLanguageMode(.v6)
             ]

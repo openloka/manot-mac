@@ -1,4 +1,4 @@
-# Contributing to ClearNote
+# Contributing to ManotApp
 
 Thank you for your interest in contributing!
 
