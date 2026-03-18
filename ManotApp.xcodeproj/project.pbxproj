@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA003019 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA002019 /* Assets.xcassets */; };
 		96569334151B47454AFA7BB5 /* ScrollSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2093BBDAACB2066E44875F1B /* ScrollSyncManager.swift */; };
 		BA003001 /* ManotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002001 /* ManotApp.swift */; };
 		BA003002 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002002 /* Folder.swift */; };
@@ -56,6 +57,7 @@
 		BA002018 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		CF001001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Signing.xcconfig; path = Configuration/Signing.xcconfig; sourceTree = SOURCE_ROOT; };
 		DF1F0F2C55C9227EE983E2CF /* MarkdownHighlighter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MarkdownHighlighter.swift; sourceTree = "<group>"; };
+		BA002019 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 		BA001004 /* Sources/ManotApp */ = {
 			isa = PBXGroup;
 			children = (
+				BA002019 /* Assets.xcassets */,
 				BA002001 /* ManotApp.swift */,
 				BA001005 /* Models */,
 				BA001006 /* Utilities */,
@@ -250,6 +253,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA003019 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,6 +337,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CF001001 /* Signing.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ManotApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -357,6 +362,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CF001001 /* Signing.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ManotApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
