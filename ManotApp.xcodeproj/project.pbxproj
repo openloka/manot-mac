@@ -27,6 +27,8 @@
 		BA003017 /* FolderTransferable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002017 /* FolderTransferable.swift */; };
 		BA003018 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA002018 /* ThemeManager.swift */; };
 		F17E366B41F0DABDF39498EA /* MarkdownHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F0F2C55C9227EE983E2CF /* MarkdownHighlighter.swift */; };
+		FE87A66A2F6B194800A9E53F /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 6D9A0C2F5E17794A35061AB8 /* Markdown */; };
+		FE87A66B2F6B194800A9E53F /* Highlighter in Frameworks */ = {isa = PBXBuildFile; productRef = C0EA8D25EC9B82FF51DB3530 /* Highlighter */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,7 +36,6 @@
 		BA001010 /* ManotApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManotApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA001021 /* ManotApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ManotApp.entitlements; sourceTree = "<group>"; };
 		BA001022 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
-		CF001001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Signing.xcconfig; path = Configuration/Signing.xcconfig; sourceTree = SOURCE_ROOT; };
 		BA002001 /* ManotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManotApp.swift; sourceTree = "<group>"; };
 		BA002002 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		BA002003 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		BA002016 /* NewItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemRow.swift; sourceTree = "<group>"; };
 		BA002017 /* FolderTransferable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderTransferable.swift; sourceTree = "<group>"; };
 		BA002018 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		CF001001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Signing.xcconfig; path = Configuration/Signing.xcconfig; sourceTree = SOURCE_ROOT; };
 		DF1F0F2C55C9227EE983E2CF /* MarkdownHighlighter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MarkdownHighlighter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,6 +63,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE87A66B2F6B194800A9E53F /* Highlighter in Frameworks */,
+				FE87A66A2F6B194800A9E53F /* Markdown in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,10 +97,10 @@
 			name = ManotApp;
 			sourceTree = "<group>";
 		};
-		BA001002 = {
+		BA001002 /* ManotApp */ = {
 			isa = PBXGroup;
 			children = (
-				BA001004 /* ManotApp */,
+				BA001004 /* Sources/ManotApp */,
 				BA001021 /* ManotApp.entitlements */,
 				BA001022 /* Info.plist */,
 				CF001001 /* Signing.xcconfig */,
@@ -114,7 +118,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BA001004 /* ManotApp */ = {
+		BA001004 /* Sources/ManotApp */ = {
 			isa = PBXGroup;
 			children = (
 				BA002001 /* ManotApp.swift */,
@@ -227,7 +231,7 @@
 				en,
 				Base,
 			);
-			mainGroup = BA001002;
+			mainGroup = BA001002 /* ManotApp */;
 			packageReferences = (
 				8FA89F3DEB3CFF178685377B /* XCRemoteSwiftPackageReference "swift-markdown" */,
 				A21CA116083990EA142CF45B /* XCRemoteSwiftPackageReference "HighlighterSwift" */,
@@ -332,8 +336,13 @@
 				CODE_SIGN_ENTITLEMENTS = ManotApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 100001;
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Manot;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manot.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
@@ -351,8 +360,13 @@
 				CODE_SIGN_ENTITLEMENTS = ManotApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 100001;
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Manot;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manot.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
@@ -388,14 +402,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		47C2CBD76F1716C7DBAD387C /* XCRemoteSwiftPackageReference "HighlighterSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/aibo-cora/HighlighterSwift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.5;
-			};
-		};
 		8FA89F3DEB3CFF178685377B /* XCRemoteSwiftPackageReference "swift-markdown" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/swiftlang/swift-markdown.git";
@@ -410,14 +416,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.0.0;
-			};
-		};
-		D9C1DFC70559865A92ECAD11 /* XCRemoteSwiftPackageReference "swift-markdown" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-markdown.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
